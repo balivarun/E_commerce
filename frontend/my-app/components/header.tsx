@@ -2,13 +2,15 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Menu, Search, ShoppingCart, User, X } from "lucide-react"
+import { Menu, Search, ShoppingCart, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Badge } from "@/components/ui/badge"
+import { UserButton, SignInButton, useUser } from '@clerk/nextjs'
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { isSignedIn } = useUser()
 
   const navItems = [
     { name: "Home", href: "/" },
@@ -63,10 +65,21 @@ export function Header() {
           </nav>
           <div className="flex items-center space-x-2">
             <ThemeToggle />
-            <Button variant="ghost" size="icon">
-              <User className="h-5 w-5" />
-              <span className="sr-only">Account</span>
-            </Button>
+            {isSignedIn ? (
+              <UserButton 
+                appearance={{
+                  elements: {
+                    avatarBox: "h-8 w-8"
+                  }
+                }}
+              />
+            ) : (
+              <SignInButton mode="modal">
+                <Button variant="ghost" size="sm">
+                  Sign In
+                </Button>
+              </SignInButton>
+            )}
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingCart className="h-5 w-5" />
               <Badge 
