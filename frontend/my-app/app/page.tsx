@@ -1,49 +1,38 @@
-import { ArrowRight, Truck, Shield, Headphones } from "lucide-react"
+"use client"
+
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import { ArrowRight, Truck, Shield, Headphones, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { ProductCard } from "@/components/product-card"
 
-const featuredProducts = [
-  {
-    id: "1",
-    name: "Wireless Bluetooth Headphones",
-    price: 199.99,
-    originalPrice: 299.99,
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
-    rating: 4.5,
-    reviews: 128,
-    isOnSale: true
-  },
-  {
-    id: "2",
-    name: "Smart Fitness Watch",
-    price: 249.99,
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
-    rating: 4.8,
-    reviews: 256,
-    isNew: true
-  },
-  {
-    id: "3",
-    name: "Premium Coffee Maker",
-    price: 89.99,
-    originalPrice: 129.99,
-    image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=400&fit=crop",
-    rating: 4.3,
-    reviews: 89,
-    isOnSale: true
-  },
-  {
-    id: "4",
-    name: "Ergonomic Office Chair",
-    price: 299.99,
-    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop",
-    rating: 4.7,
-    reviews: 167
+interface ApiProduct {
+  id: number
+  title: string
+  price: number
+  description: string
+  category: string
+  image: string
+  rating: {
+    rate: number
+    count: number
   }
-]
+}
+
+interface Product {
+  id: string
+  name: string
+  price: number
+  originalPrice?: number
+  image: string
+  rating: number
+  reviews: number
+  isNew?: boolean
+  isOnSale?: boolean
+}
 
 const features = [
   {
@@ -64,6 +53,42 @@ const features = [
 ]
 
 export default function Home() {
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchFeaturedProducts = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch('https://fakestoreapi.com/products?limit=4')
+        if (!response.ok) {
+          throw new Error('Failed to fetch products')
+        }
+        const apiProducts: ApiProduct[] = await response.json()
+        
+        const transformedProducts: Product[] = apiProducts.map((product, index) => ({
+          id: product.id.toString(),
+          name: product.title,
+          price: product.price,
+          originalPrice: Math.random() > 0.5 ? product.price * 1.3 : undefined,
+          image: product.image,
+          rating: product.rating.rate,
+          reviews: product.rating.count,
+          isNew: index === 1,
+          isOnSale: index === 0 || index === 2
+        }))
+        
+        setFeaturedProducts(transformedProducts)
+      } catch (err) {
+        console.error('Failed to fetch featured products:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchFeaturedProducts()
+  }, [])
+
   return (
     <div className="min-h-screen">
       <Header />
@@ -77,13 +102,17 @@ export default function Home() {
             <p className="text-xl text-muted-foreground mb-8">
               Shop the latest trends and discover unique finds from top brands around the world
             </p>
-            <Button size="lg" className="mr-4">
-              Shop Now
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="lg">
-              Explore Categories
-            </Button>
+            <Link href="/products">
+              <Button size="lg" className="mr-4">
+                Shop Now
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+            <Link href="/categories">
+              <Button variant="outline" size="lg">
+                Explore Categories
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -110,15 +139,26 @@ export default function Home() {
             <h2 className="text-3xl font-bold mb-4">Featured Products</h2>
             <p className="text-muted-foreground">Discover our most popular items</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex items-center justify-center h-64">
+              <div className="text-center">
+                <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+                <p className="text-muted-foreground">Loading featured products...</p>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {featuredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
           <div className="text-center mt-12">
-            <Button variant="outline" size="lg">
-              View All Products
-            </Button>
+            <Link href="/products">
+              <Button variant="outline" size="lg">
+                View All Products
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Menu, Search, ShoppingCart, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -16,7 +17,6 @@ export function Header() {
     { name: "Home", href: "/" },
     { name: "Products", href: "/products" },
     { name: "Categories", href: "/categories" },
-    { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" }
   ]
 
@@ -25,7 +25,13 @@ export function Header() {
       <div className="container mx-auto flex h-16 items-center px-4">
         <div className="mr-4 hidden md:flex">
           <Link className="mr-6 flex items-center space-x-2" href="/">
-            <div className="h-8 w-8 rounded bg-primary"></div>
+            <Image 
+              src="/shop.png" 
+              alt="ShopSphere Logo" 
+              width={32} 
+              height={32} 
+              className="rounded"
+            />
             <span className="hidden font-bold sm:inline-block">
               ShopSphere
             </span>
