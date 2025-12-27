@@ -10,10 +10,10 @@ export default function Page() {
             <span className="font-bold text-xl">ShopSphere</span>
           </div>
         </div>
-        <SignUp 
+        <SignUp
           appearance={{
             elements: {
-              rootBox: "mx-auto",
+              rootBox: "mx-auto", 
               card: "shadow-none border bg-card",
             }
           }}

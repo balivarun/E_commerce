@@ -8,10 +8,12 @@ import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Badge } from "@/components/ui/badge"
 import { UserButton, SignInButton, useUser } from '@clerk/nextjs'
+import { useCart } from "@/contexts/cart-context"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { isSignedIn } = useUser()
+  const { state } = useCart()
 
   const navItems = [
     { name: "Home", href: "/" },
@@ -86,16 +88,20 @@ export function Header() {
                 </Button>
               </SignInButton>
             )}
-            <Button variant="ghost" size="icon" className="relative">
-              <ShoppingCart className="h-5 w-5" />
-              <Badge 
-                variant="destructive" 
-                className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 text-xs"
-              >
-                3
-              </Badge>
-              <span className="sr-only">Shopping cart</span>
-            </Button>
+            <Link href="/cart">
+              <Button variant="ghost" size="icon" className="relative">
+                <ShoppingCart className="h-5 w-5" />
+                {state.itemCount > 0 && (
+                  <Badge 
+                    variant="destructive" 
+                    className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center"
+                  >
+                    {state.itemCount}
+                  </Badge>
+                )}
+                <span className="sr-only">Shopping cart</span>
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

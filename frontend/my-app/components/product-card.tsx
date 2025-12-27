@@ -1,8 +1,11 @@
+"use client"
+
 import Image from "next/image"
 import { Star, ShoppingCart, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { useCart } from "@/contexts/cart-context"
 
 interface Product {
   id: string
@@ -21,9 +24,20 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const { addItem } = useCart()
+  
   const discount = product.originalPrice 
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0
+
+  const handleAddToCart = () => {
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image
+    })
+  }
 
   return (
     <Card className="group overflow-hidden transition-shadow hover:shadow-lg">
@@ -81,7 +95,7 @@ export function ProductCard({ product }: ProductCardProps) {
       </CardContent>
       
       <CardFooter className="p-4 pt-0">
-        <Button className="w-full" size="sm">
+        <Button className="w-full" size="sm" onClick={handleAddToCart}>
           <ShoppingCart className="h-4 w-4 mr-2" />
           Add to Cart
         </Button>
