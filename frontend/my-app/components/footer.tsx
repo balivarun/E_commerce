@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Facebook, Twitter, Instagram, Mail } from "lucide-react"
 
 export function Footer() {
@@ -8,7 +9,13 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
-              <div className="h-6 w-6 rounded bg-primary"></div>
+              <Image 
+                src="/shop.png" 
+                alt="ShopSphere Logo" 
+                width={24} 
+                height={24} 
+                className="rounded"
+              />
               <span className="font-bold">ShopSphere</span>
             </div>
             <p className="text-sm text-muted-foreground">
@@ -34,10 +41,10 @@ export function Footer() {
             <h3 className="font-semibold">Shop</h3>
             <ul className="space-y-1 text-sm">
               <li><Link href="/products" className="text-muted-foreground hover:text-primary">All Products</Link></li>
-              <li><Link href="/categories/electronics" className="text-muted-foreground hover:text-primary">Electronics</Link></li>
-              <li><Link href="/categories/fashion" className="text-muted-foreground hover:text-primary">Fashion</Link></li>
-              <li><Link href="/categories/home" className="text-muted-foreground hover:text-primary">Home & Garden</Link></li>
-              <li><Link href="/categories/sports" className="text-muted-foreground hover:text-primary">Sports</Link></li>
+              <li><Link href="/products?category=electronics" className="text-muted-foreground hover:text-primary">Electronics</Link></li>
+              <li><Link href="/products?category=jewelery" className="text-muted-foreground hover:text-primary">Jewelry</Link></li>
+              <li><Link href="/products?category=men's clothing" className="text-muted-foreground hover:text-primary">Men's Clothing</Link></li>
+              <li><Link href="/products?category=women's clothing" className="text-muted-foreground hover:text-primary">Women's Clothing</Link></li>
             </ul>
           </div>
 
