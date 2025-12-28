@@ -1,10 +1,16 @@
 import Razorpay from 'razorpay'
 
-// Initialize Razorpay instance (for server-side)
-export const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID!,
-  key_secret: process.env.RAZORPAY_KEY_SECRET!,
-})
+// Initialize Razorpay instance (for server-side) - only when needed
+export const createRazorpayInstance = () => {
+  if (!process.env.RAZORPAY_KEY_SECRET || !process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
+    throw new Error('Razorpay credentials are not configured')
+  }
+  
+  return new Razorpay({
+    key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+  })
+}
 
 // Client-side configuration
 export const razorpayConfig = {
@@ -20,6 +26,7 @@ export const razorpayConfig = {
 // Order creation function
 export async function createRazorpayOrder(amount: number) {
   try {
+    const razorpay = createRazorpayInstance()
     const order = await razorpay.orders.create({
       amount: Math.round(amount * 100), // Amount in paise
       currency: 'INR',
