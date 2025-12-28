@@ -66,17 +66,24 @@ export default function Home() {
         }
         const apiProducts: ApiProduct[] = await response.json()
         
-        const transformedProducts: Product[] = apiProducts.map((product, index) => ({
-          id: product.id.toString(),
-          name: product.title,
-          price: product.price,
-          originalPrice: Math.random() > 0.5 ? product.price * 1.3 : undefined,
-          image: product.image,
-          rating: product.rating.rate,
-          reviews: product.rating.count,
-          isNew: index === 1,
-          isOnSale: index === 0 || index === 2
-        }))
+        const transformedProducts: Product[] = apiProducts.map((product, index) => {
+          // Convert to INR and make prices under ₹100
+          const basePrice = Math.min(product.price * 4, 99) // Convert USD to INR and cap at 99
+          const finalPrice = Math.max(Math.round(basePrice), 19) // Minimum ₹19, rounded
+          const hasOriginalPrice = Math.random() > 0.5
+          
+          return {
+            id: product.id.toString(),
+            name: product.title,
+            price: finalPrice,
+            originalPrice: hasOriginalPrice ? Math.round(finalPrice * 1.3) : undefined,
+            image: product.image,
+            rating: product.rating.rate,
+            reviews: product.rating.count,
+            isNew: index === 1,
+            isOnSale: index === 0 || index === 2
+          }
+        })
         
         setFeaturedProducts(transformedProducts)
       } catch (err) {

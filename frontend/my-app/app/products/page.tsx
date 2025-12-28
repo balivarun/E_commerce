@@ -67,17 +67,24 @@ export default function ProductsPage() {
         }
         const apiProducts: ApiProduct[] = await response.json()
         
-        const transformedProducts: Product[] = apiProducts.map((product, index) => ({
-          id: product.id.toString(),
-          name: product.title,
-          price: product.price,
-          originalPrice: Math.random() > 0.7 ? product.price * 1.3 : undefined,
-          image: product.image,
-          rating: product.rating.rate,
-          reviews: product.rating.count,
-          isNew: Math.random() > 0.8,
-          isOnSale: Math.random() > 0.6
-        }))
+        const transformedProducts: Product[] = apiProducts.map((product, index) => {
+          // Convert to INR and make prices under ₹100
+          const basePrice = Math.min(product.price * 4, 99) // Convert USD to INR (rough conversion) and cap at 99
+          const finalPrice = Math.max(Math.round(basePrice), 19) // Minimum ₹19, rounded
+          const hasOriginalPrice = Math.random() > 0.7
+          
+          return {
+            id: product.id.toString(),
+            name: product.title,
+            price: finalPrice,
+            originalPrice: hasOriginalPrice ? Math.round(finalPrice * 1.3) : undefined,
+            image: product.image,
+            rating: product.rating.rate,
+            reviews: product.rating.count,
+            isNew: Math.random() > 0.8,
+            isOnSale: Math.random() > 0.6
+          }
+        })
         
         setProducts(transformedProducts)
       } catch (err) {

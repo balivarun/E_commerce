@@ -8,21 +8,21 @@ const shippingOptions = [
     icon: Truck,
     name: "Standard Shipping",
     time: "3-5 Business Days",
-    price: "Free on orders $50+",
+    price: "Free on orders ₹500+",
     description: "Our standard shipping option for most orders within the continental US."
   },
   {
     icon: Clock,
     name: "Express Shipping",
     time: "1-2 Business Days",
-    price: "$9.99",
+    price: "₹99",
     description: "Fast delivery for when you need your items quickly."
   },
   {
     icon: Package,
     name: "Overnight Shipping",
     time: "Next Business Day",
-    price: "$19.99",
+    price: "₹199",
     description: "Get your order the next business day with our fastest shipping option."
   },
   {
@@ -87,7 +87,7 @@ export default function ShippingPage() {
                 <div>
                   <h3 className="font-semibold mb-2">Free Shipping</h3>
                   <p className="text-sm text-muted-foreground">
-                    Enjoy free standard shipping on all orders over $50 within the continental United States. 
+                    Enjoy free standard shipping on all orders over ₹500 within India. 
                     Free shipping promotions cannot be combined with other offers.
                   </p>
                 </div>

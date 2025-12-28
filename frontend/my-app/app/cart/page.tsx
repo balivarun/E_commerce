@@ -27,9 +27,8 @@ export default function CartPage() {
     console.error('Payment error:', error)
   }
 
-  // Convert USD to INR (approximate rate: 1 USD = 83 INR)
-  const totalInINR = state.total * 83
-  const finalAmountInINR = totalInINR * 1.1 // Including tax
+  // Prices are already in INR
+  const finalAmountInINR = state.total * 1.1 // Including tax
 
   if (state.items.length === 0) {
     return (
@@ -106,7 +105,7 @@ export default function CartPage() {
                         </div>
                         <div className="flex-1">
                           <h3 className="font-semibold line-clamp-2">{item.name}</h3>
-                          <p className="text-lg font-bold mt-1">${item.price.toFixed(2)}</p>
+                          <p className="text-lg font-bold mt-1">₹{item.price.toFixed(2)}</p>
                         </div>
                         <div className="flex items-center gap-2">
                           <Button
@@ -140,7 +139,7 @@ export default function CartPage() {
                       </div>
                       <div className="mt-4 flex justify-between items-center">
                         <span className="text-sm text-muted-foreground">
-                          Subtotal: ${(item.price * item.quantity).toFixed(2)}
+                          Subtotal: ₹{(item.price * item.quantity).toFixed(2)}
                         </span>
                       </div>
                     </CardContent>
@@ -168,7 +167,7 @@ export default function CartPage() {
                   <div className="space-y-2 mb-4">
                     <div className="flex justify-between">
                       <span>Subtotal</span>
-                      <span>${state.total.toFixed(2)} (₹{totalInINR.toFixed(2)})</span>
+                      <span>₹{state.total.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Shipping</span>
@@ -176,12 +175,12 @@ export default function CartPage() {
                     </div>
                     <div className="flex justify-between">
                       <span>Tax</span>
-                      <span>${(state.total * 0.1).toFixed(2)} (₹{(totalInINR * 0.1).toFixed(2)})</span>
+                      <span>₹{(state.total * 0.1).toFixed(2)}</span>
                     </div>
                     <div className="border-t pt-2 mt-2">
                       <div className="flex justify-between font-bold text-lg">
                         <span>Total</span>
-                        <span>${(state.total * 1.1).toFixed(2)} (₹{finalAmountInINR.toFixed(2)})</span>
+                        <span>₹{finalAmountInINR.toFixed(2)}</span>
                       </div>
                     </div>
                   </div>
