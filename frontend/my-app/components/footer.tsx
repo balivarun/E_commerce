@@ -9,11 +9,11 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
-              <Image 
-                src="/shop.png" 
-                alt="ShopSphere Logo" 
-                width={24} 
-                height={24} 
+              <Image
+                src="/shop.png"
+                alt="ShopSphere Logo"
+                width={24}
+                height={24}
                 className="rounded"
               />
               <span className="font-bold">ShopSphere</span>
@@ -21,20 +21,6 @@ export function Footer() {
             <p className="text-sm text-muted-foreground">
               Your one-stop destination for modern shopping experience with quality products and exceptional service.
             </p>
-            <div className="flex space-x-4">
-              <Link href="#" className="text-muted-foreground hover:text-primary">
-                <Facebook className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary">
-                <Twitter className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary">
-                <Instagram className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary">
-                <Mail className="h-5 w-5" />
-              </Link>
-            </div>
           </div>
 
           <div className="space-y-3">
