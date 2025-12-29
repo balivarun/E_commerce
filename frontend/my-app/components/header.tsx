@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { Menu, Search, ShoppingCart, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -12,6 +13,8 @@ import { useCart } from "@/contexts/cart-context"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const router = useRouter()
   const { isSignedIn } = useUser()
   const { state } = useCart()
 
@@ -21,6 +24,20 @@ export function Header() {
     { name: "Categories", href: "/categories" },
     { name: "Contact", href: "/contact" }
   ]
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`)
+      setSearchQuery("")
+    }
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch(e)
+    }
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -51,14 +68,17 @@ export function Header() {
 
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
           <div className="w-full flex-1 md:w-auto md:flex-none">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <form onSubmit={handleSearch} className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground cursor-pointer" onClick={handleSearch} />
               <input
                 type="search"
                 placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={handleKeyPress}
                 className="w-full rounded-md border border-input bg-background px-8 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:w-[300px] lg:w-[400px]"
               />
-            </div>
+            </form>
           </div>
           <nav className="hidden md:flex md:items-center md:space-x-6">
             {navItems.map((item) => (

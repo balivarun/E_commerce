@@ -49,6 +49,14 @@ function ProductsContent() {
   const [sortBy, setSortBy] = useState("")
   const searchParams = useSearchParams()
   const categoryFilter = searchParams.get('category')
+  const urlSearchQuery = searchParams.get('search')
+
+  // Set search term from URL parameter when component mounts
+  useEffect(() => {
+    if (urlSearchQuery) {
+      setSearchTerm(urlSearchQuery)
+    }
+  }, [urlSearchQuery])
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -159,12 +167,19 @@ function ProductsContent() {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-4">
-            {categoryFilter ? `${categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1)} Products` : 'All Products'}
+            {urlSearchQuery 
+              ? `Search Results for "${urlSearchQuery}"`
+              : categoryFilter 
+                ? `${categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1)} Products` 
+                : 'All Products'
+            }
           </h1>
           <p className="text-muted-foreground">
-            {categoryFilter 
-              ? `Explore our ${categoryFilter} collection (${products.length} items)`
-              : `Discover our complete collection of quality products (${products.length} items)`
+            {urlSearchQuery
+              ? `Found ${filteredAndSortedProducts.length} products matching "${urlSearchQuery}"`
+              : categoryFilter 
+                ? `Explore our ${categoryFilter} collection (${products.length} items)`
+                : `Discover our complete collection of quality products (${products.length} items)`
             }
           </p>
         </div>
