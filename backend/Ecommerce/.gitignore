@@ -35,3 +35,57 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Security & Credentials ###
+# Environment files with sensitive data
+.env
+.env.local
+.env.development
+.env.staging
+.env.production
+.env.test
+
+# Application properties with sensitive data
+application-*.properties
+application-*.yml
+application-*.yaml
+
+# Database configuration files
+database.properties
+db.properties
+
+# Key files and certificates
+*.key
+*.pem
+*.crt
+*.p12
+*.jks
+*.keystore
+*.truststore
+
+# Security configuration files
+security.properties
+auth.properties
+oauth.properties
+
+# API keys and secrets
+api-keys.properties
+secrets.properties
+config/secrets/
+config/keys/
+
+# Log files that might contain sensitive data
+*.log
+logs/
+log/
+
+# Temporary files that might contain sensitive data
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Backup files that might contain sensitive data
+*.bak
+*.backup
+backup/
