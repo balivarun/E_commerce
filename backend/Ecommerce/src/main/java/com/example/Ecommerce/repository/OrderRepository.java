@@ -16,6 +16,9 @@ public interface OrderRepository extends MongoRepository<Order, String> {
     // Find order by Razorpay payment ID
     Optional<Order> findByRazorpayPaymentId(String razorpayPaymentId);
     
+    // Find orders by user ID
+    List<Order> findByUserIdOrderByCreatedAtDesc(String userId);
+
     // Find orders by customer email
     List<Order> findByCustomerEmailOrderByCreatedAtDesc(String customerEmail);
     

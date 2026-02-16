@@ -9,17 +9,19 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { ProductCard } from "@/components/product-card"
 
-interface ApiProduct {
-  id: number
-  title: string
+interface BackendProduct {
+  id: string
+  name: string
   price: number
-  description: string
+  originalPrice?: number
+  imageUrl: string
+  rating: number
+  reviewCount: number
+  isNew?: boolean
+  isOnSale?: boolean
   category: string
-  image: string
-  rating: {
-    rate: number
-    count: number
-  }
+  description: string
+  stockQuantity: number
 }
 
 interface Product {
@@ -33,6 +35,8 @@ interface Product {
   isNew?: boolean
   isOnSale?: boolean
 }
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
 
 const features = [
   {
@@ -60,31 +64,24 @@ export default function Home() {
     const fetchFeaturedProducts = async () => {
       try {
         setLoading(true)
-        const response = await fetch('https://fakestoreapi.com/products?limit=4')
+        const response = await fetch(`${API_URL}/products/featured?limit=4`)
         if (!response.ok) {
           throw new Error('Failed to fetch products')
         }
-        const apiProducts: ApiProduct[] = await response.json()
-        
-        const transformedProducts: Product[] = apiProducts.map((product, index) => {
-          // Convert to INR and make prices under ₹100
-          const basePrice = Math.min(product.price * 4, 99) // Convert USD to INR and cap at 99
-          const finalPrice = Math.max(Math.round(basePrice), 19) // Minimum ₹19, rounded
-          const hasOriginalPrice = Math.random() > 0.5
-          
-          return {
-            id: product.id.toString(),
-            name: product.title,
-            price: finalPrice,
-            originalPrice: hasOriginalPrice ? Math.round(finalPrice * 1.3) : undefined,
-            image: product.image,
-            rating: product.rating.rate,
-            reviews: product.rating.count,
-            isNew: index === 1,
-            isOnSale: index === 0 || index === 2
-          }
-        })
-        
+        const backendProducts: BackendProduct[] = await response.json()
+
+        const transformedProducts: Product[] = backendProducts.map((product) => ({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          originalPrice: product.originalPrice || undefined,
+          image: product.imageUrl,
+          rating: product.rating,
+          reviews: product.reviewCount,
+          isNew: product.isNew,
+          isOnSale: product.isOnSale
+        }))
+
         setFeaturedProducts(transformedProducts)
       } catch (err) {
         console.error('Failed to fetch featured products:', err)

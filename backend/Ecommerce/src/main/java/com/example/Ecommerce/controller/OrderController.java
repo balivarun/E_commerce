@@ -1,11 +1,13 @@
 package com.example.Ecommerce.controller;
 
 import com.example.Ecommerce.entity.Order;
+import com.example.Ecommerce.entity.User;
 import com.example.Ecommerce.repository.OrderRepository;
 import com.example.Ecommerce.service.RazorpayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -24,21 +26,29 @@ public class OrderController {
     
     // Create Razorpay order
     @PostMapping("/create-order")
-    public ResponseEntity<Map<String, Object>> createOrder(@RequestBody Map<String, Object> orderRequest) {
+    public ResponseEntity<Map<String, Object>> createOrder(@RequestBody Map<String, Object> orderRequest, Authentication authentication) {
         try {
             Double amount = ((Number) orderRequest.get("amount")).doubleValue();
             String currency = (String) orderRequest.getOrDefault("currency", "INR");
-            
+
             // Create order in Razorpay
             Map<String, Object> razorpayOrder = razorpayService.createOrder(amount, currency);
-            
+
             // Save order in database
             Order order = new Order();
             order.setRazorpayOrderId((String) razorpayOrder.get("id"));
             order.setTotalAmount(amount);
             order.setCurrency(currency);
             order.setStatus(Order.OrderStatus.CREATED);
-            
+
+            // Link order to authenticated user if logged in
+            if (authentication != null && authentication.getPrincipal() instanceof User) {
+                User user = (User) authentication.getPrincipal();
+                order.setUserId(user.getId());
+                order.setCustomerEmail(user.getEmail());
+                order.setCustomerName(user.getName());
+            }
+
             orderRepository.save(order);
             
             return ResponseEntity.ok(razorpayOrder);
@@ -119,6 +129,20 @@ public class OrderController {
     public ResponseEntity<Object> getOrdersByEmail(@RequestParam String email) {
         try {
             return ResponseEntity.ok(orderRepository.findByCustomerEmailOrderByCreatedAtDesc(email));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // Get orders for the authenticated user
+    @GetMapping("/my-orders")
+    public ResponseEntity<Object> getMyOrders(Authentication authentication) {
+        try {
+            if (authentication == null || !(authentication.getPrincipal() instanceof User)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            User user = (User) authentication.getPrincipal();
+            return ResponseEntity.ok(orderRepository.findByUserIdOrderByCreatedAtDesc(user.getId()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

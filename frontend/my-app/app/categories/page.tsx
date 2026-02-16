@@ -8,17 +8,19 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 
-interface ApiProduct {
-  id: number
-  title: string
+interface BackendProduct {
+  id: string
+  name: string
   price: number
-  description: string
+  originalPrice?: number
+  imageUrl: string
+  rating: number
+  reviewCount: number
+  isNew?: boolean
+  isOnSale?: boolean
   category: string
-  image: string
-  rating: {
-    rate: number
-    count: number
-  }
+  description: string
+  stockQuantity: number
 }
 
 interface Category {
@@ -30,6 +32,8 @@ interface Category {
   href: string
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
+
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
@@ -39,50 +43,47 @@ export default function CategoriesPage() {
     const fetchCategories = async () => {
       try {
         setLoading(true)
-        
-        // Fetch all categories
-        const categoriesResponse = await fetch('https://fakestoreapi.com/products/categories')
-        if (!categoriesResponse.ok) {
-          throw new Error('Failed to fetch categories')
-        }
-        const apiCategories: string[] = await categoriesResponse.json()
-        
-        // Fetch all products to get images and count products per category
-        const productsResponse = await fetch('https://fakestoreapi.com/products')
+
+        // Fetch all products from backend to group by category
+        const productsResponse = await fetch(`${API_URL}/products`)
         if (!productsResponse.ok) {
           throw new Error('Failed to fetch products')
         }
-        const products: ApiProduct[] = await productsResponse.json()
-        
-        // Create categories with images and product counts
-        const categoriesWithData: Category[] = apiCategories.map((categoryName) => {
-          const categoryProducts = products.filter(product => product.category === categoryName)
-          const representativeProduct = categoryProducts[0] // Use first product's image as category image
-          
-          // Format category name for display
+        const products: BackendProduct[] = await productsResponse.json()
+
+        // Group products by category
+        const categoryMap = new Map<string, BackendProduct[]>()
+        products.forEach(product => {
+          const existing = categoryMap.get(product.category) || []
+          existing.push(product)
+          categoryMap.set(product.category, existing)
+        })
+
+        // Create category descriptions
+        const descriptions: { [key: string]: string } = {
+          electronics: "Latest gadgets and tech accessories",
+          jewelery: "Beautiful jewelry and accessories",
+          "men's clothing": "Stylish men's fashion and apparel",
+          "women's clothing": "Trendy women's fashion and clothing"
+        }
+
+        // Build categories with images and product counts
+        const categoriesWithData: Category[] = Array.from(categoryMap.entries()).map(([categoryName, categoryProducts]) => {
           const formattedName = categoryName
             .split(' ')
             .map(word => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ')
-          
-          // Create category descriptions
-          const descriptions: { [key: string]: string } = {
-            electronics: "Latest gadgets and tech accessories",
-            jewelery: "Beautiful jewelry and accessories",
-            "men's clothing": "Stylish men's fashion and apparel",
-            "women's clothing": "Trendy women's fashion and clothing"
-          }
-          
+
           return {
             id: categoryName.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(),
             name: formattedName,
             description: descriptions[categoryName] || `Quality ${formattedName.toLowerCase()} products`,
-            image: representativeProduct?.image || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop",
+            image: categoryProducts[0]?.imageUrl || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=300&fit=crop",
             productCount: categoryProducts.length,
             href: `/products?category=${encodeURIComponent(categoryName)}`
           }
         })
-        
+
         setCategories(categoriesWithData)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Something went wrong')

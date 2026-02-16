@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ClerkProvider } from '@clerk/nextjs';
+import { AuthProvider } from "@/contexts/auth-context";
 import { CartProvider } from "@/contexts/cart-context";
 
 export const metadata: Metadata = {
@@ -15,24 +15,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <head>
-          <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-        </head>
-        <body className="font-sans antialiased">
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+      </head>
+      <body className="font-sans antialiased">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AuthProvider>
             <CartProvider>
               {children}
             </CartProvider>
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

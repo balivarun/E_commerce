@@ -16,17 +16,19 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-interface ApiProduct {
-  id: number
-  title: string
+interface BackendProduct {
+  id: string
+  name: string
   price: number
-  description: string
+  originalPrice?: number
+  imageUrl: string
+  rating: number
+  reviewCount: number
+  isNew?: boolean
+  isOnSale?: boolean
   category: string
-  image: string
-  rating: {
-    rate: number
-    count: number
-  }
+  description: string
+  stockQuantity: number
 }
 
 interface Product {
@@ -40,6 +42,8 @@ interface Product {
   isNew?: boolean
   isOnSale?: boolean
 }
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
 
 function ProductsContent() {
   const [products, setProducts] = useState<Product[]>([])
@@ -62,38 +66,38 @@ function ProductsContent() {
     const fetchProducts = async () => {
       try {
         setLoading(true)
-        let url = 'https://fakestoreapi.com/products'
-        
-        // If category filter is provided, fetch products from that category
+        let url = `${API_URL}/products`
+
+        // Build query params for filtering
+        const params = new URLSearchParams()
         if (categoryFilter) {
-          url = `https://fakestoreapi.com/products/category/${encodeURIComponent(categoryFilter)}`
+          params.set('category', categoryFilter)
         }
-        
+        if (urlSearchQuery) {
+          params.set('search', urlSearchQuery)
+        }
+        if (params.toString()) {
+          url += `?${params.toString()}`
+        }
+
         const response = await fetch(url)
         if (!response.ok) {
           throw new Error('Failed to fetch products')
         }
-        const apiProducts: ApiProduct[] = await response.json()
-        
-        const transformedProducts: Product[] = apiProducts.map((product, index) => {
-          // Convert to INR and make prices under ₹100
-          const basePrice = Math.min(product.price * 4, 99) // Convert USD to INR (rough conversion) and cap at 99
-          const finalPrice = Math.max(Math.round(basePrice), 19) // Minimum ₹19, rounded
-          const hasOriginalPrice = Math.random() > 0.7
-          
-          return {
-            id: product.id.toString(),
-            name: product.title,
-            price: finalPrice,
-            originalPrice: hasOriginalPrice ? Math.round(finalPrice * 1.3) : undefined,
-            image: product.image,
-            rating: product.rating.rate,
-            reviews: product.rating.count,
-            isNew: Math.random() > 0.8,
-            isOnSale: Math.random() > 0.6
-          }
-        })
-        
+        const backendProducts: BackendProduct[] = await response.json()
+
+        const transformedProducts: Product[] = backendProducts.map((product) => ({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          originalPrice: product.originalPrice || undefined,
+          image: product.imageUrl,
+          rating: product.rating,
+          reviews: product.reviewCount,
+          isNew: product.isNew,
+          isOnSale: product.isOnSale
+        }))
+
         setProducts(transformedProducts)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Something went wrong')
@@ -103,7 +107,7 @@ function ProductsContent() {
     }
 
     fetchProducts()
-  }, [categoryFilter])
+  }, [categoryFilter, urlSearchQuery])
 
   const filteredAndSortedProducts = products
     .filter(product =>

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/contexts/cart-context'
-import { useUser } from '@clerk/nextjs'
+import { useAuth } from '@/contexts/auth-context'
 
 declare global {
   interface Window {
@@ -20,7 +20,7 @@ interface RazorpayCheckoutProps {
 export function RazorpayCheckout({ amount, onSuccess, onError }: RazorpayCheckoutProps) {
   const [loading, setLoading] = useState(false)
   const { clearCart } = useCart()
-  const { user } = useUser()
+  const { state: authState } = useAuth()
 
   const handlePayment = async () => {
     if (!window.Razorpay) {
@@ -85,9 +85,8 @@ export function RazorpayCheckout({ amount, onSuccess, onError }: RazorpayCheckou
           }
         },
         prefill: {
-          name: user?.fullName || '',
-          email: user?.primaryEmailAddress?.emailAddress || '',
-          contact: user?.primaryPhoneNumber?.phoneNumber || '',
+          name: authState.user?.name || '',
+          email: authState.user?.email || '',
         },
         theme: {
           color: '#3B82F6',

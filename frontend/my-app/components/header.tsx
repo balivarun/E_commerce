@@ -4,18 +4,19 @@ import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { Menu, Search, ShoppingCart, X } from "lucide-react"
+import { Menu, Search, ShoppingCart, X, LogOut, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Badge } from "@/components/ui/badge"
-import { UserButton, SignInButton, useUser } from '@clerk/nextjs'
+import { useAuth } from "@/contexts/auth-context"
 import { useCart } from "@/contexts/cart-context"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+  const [showUserMenu, setShowUserMenu] = useState(false)
   const router = useRouter()
-  const { isSignedIn } = useUser()
+  const { state: authState, logout } = useAuth()
   const { state } = useCart()
 
   const navItems = [
@@ -39,16 +40,22 @@ export function Header() {
     }
   }
 
+  const handleLogout = () => {
+    logout()
+    setShowUserMenu(false)
+    router.push("/")
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center px-4">
         <div className="mr-4 hidden md:flex">
           <Link className="mr-6 flex items-center space-x-2" href="/">
-            <Image 
-              src="/shop.png" 
-              alt="ShopSphere Logo" 
-              width={32} 
-              height={32} 
+            <Image
+              src="/shop.png"
+              alt="ShopSphere Logo"
+              width={32}
+              height={32}
               className="rounded"
             />
             <span className="hidden font-bold sm:inline-block">
@@ -93,27 +100,55 @@ export function Header() {
           </nav>
           <div className="flex items-center space-x-2">
             <ThemeToggle />
-            {isSignedIn ? (
-              <UserButton 
-                appearance={{
-                  elements: {
-                    avatarBox: "h-8 w-8"
-                  }
-                }}
-              />
+            {authState.isAuthenticated && authState.user ? (
+              <div className="relative">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative h-8 w-8 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                >
+                  <span className="text-sm font-medium">
+                    {authState.user.name.charAt(0).toUpperCase()}
+                  </span>
+                </Button>
+                {showUserMenu && (
+                  <div className="absolute right-0 top-10 z-50 w-56 rounded-md border bg-background p-2 shadow-lg">
+                    <div className="border-b px-3 py-2 mb-1">
+                      <p className="text-sm font-medium">{authState.user.name}</p>
+                      <p className="text-xs text-muted-foreground">{authState.user.email}</p>
+                    </div>
+                    <Link
+                      href="/my-orders"
+                      className="flex items-center gap-2 rounded-sm px-3 py-2 text-sm hover:bg-accent"
+                      onClick={() => setShowUserMenu(false)}
+                    >
+                      <User className="h-4 w-4" />
+                      My Orders
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="flex w-full items-center gap-2 rounded-sm px-3 py-2 text-sm text-destructive hover:bg-accent"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
-              <SignInButton mode="modal">
+              <Link href="/login">
                 <Button variant="ghost" size="sm">
                   Sign In
                 </Button>
-              </SignInButton>
+              </Link>
             )}
             <Link href="/cart">
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="h-5 w-5" />
                 {state.itemCount > 0 && (
-                  <Badge 
-                    variant="destructive" 
+                  <Badge
+                    variant="destructive"
                     className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center"
                   >
                     {state.itemCount}

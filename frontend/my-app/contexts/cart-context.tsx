@@ -1,6 +1,6 @@
 "use client"
 
-import React, { createContext, useContext, useReducer, ReactNode } from 'react'
+import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react'
 
 export interface CartItem {
   id: string
@@ -21,6 +21,7 @@ type CartAction =
   | { type: 'REMOVE_ITEM'; payload: string }
   | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
   | { type: 'CLEAR_CART' }
+  | { type: 'HYDRATE'; payload: CartState }
 
 interface CartContextType {
   state: CartState
@@ -71,7 +72,10 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
     
     case 'CLEAR_CART':
       return { items: [], total: 0, itemCount: 0 }
-    
+
+    case 'HYDRATE':
+      return action.payload
+
     default:
       return state
   }
@@ -93,6 +97,25 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     total: 0,
     itemCount: 0
   })
+
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('cart')
+      if (saved) {
+        try {
+          dispatch({ type: 'HYDRATE', payload: JSON.parse(saved) })
+        } catch {}
+      }
+    }
+  }, [])
+
+  // Save cart to localStorage on every change
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('cart', JSON.stringify(state))
+    }
+  }, [state])
 
   const addItem = (item: Omit<CartItem, 'quantity'>) => {
     dispatch({ type: 'ADD_ITEM', payload: item })

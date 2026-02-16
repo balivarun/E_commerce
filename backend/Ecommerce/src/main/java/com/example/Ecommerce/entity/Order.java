@@ -33,6 +33,9 @@ public class Order {
     
     private OrderStatus status = OrderStatus.CREATED;
     
+    @Field("user_id")
+    private String userId;
+
     @Field("customer_email")
     private String customerEmail;
     
@@ -69,6 +72,14 @@ public class Order {
     }
     
     // Getters and Setters
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public String getId() {
         return id;
     }
