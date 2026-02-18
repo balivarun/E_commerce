@@ -73,7 +73,7 @@ export default function ProductDetailPage() {
         <Header />
         <div className="container mx-auto px-4 py-8 flex items-center justify-center h-96">
           <div className="text-center">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
             <p className="text-muted-foreground">Loading product...</p>
           </div>
         </div>
@@ -104,14 +104,14 @@ export default function ProductDetailPage() {
       <Header />
 
       <div className="container mx-auto px-4 py-8">
-        <Link href="/products" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-6">
+        <Link href="/products" className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors mb-6">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Products
         </Link>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {/* Product Image */}
-          <div className="relative aspect-square overflow-hidden rounded-lg">
+          <div className="relative aspect-square overflow-hidden rounded-2xl shadow-2xl shadow-indigo-500/10">
             <Image
               src={product.imageUrl}
               alt={product.name}
@@ -120,14 +120,14 @@ export default function ProductDetailPage() {
               priority
             />
             <div className="absolute top-4 left-4 flex flex-col gap-2">
-              {product.isNew && <Badge className="bg-green-600">New</Badge>}
-              {product.isOnSale && discount > 0 && <Badge variant="destructive">-{discount}%</Badge>}
+              {product.isNew && <Badge className="bg-emerald-500 shadow-sm">New</Badge>}
+              {product.isOnSale && discount > 0 && <Badge variant="destructive" className="shadow-sm">-{discount}%</Badge>}
             </div>
           </div>
 
           {/* Product Info */}
           <div>
-            <Link href={`/products?category=${product.category}`} className="text-sm text-muted-foreground hover:underline capitalize">
+            <Link href={`/products?category=${product.category}`} className="text-sm text-primary hover:underline capitalize font-medium">
               {product.category}
             </Link>
 
@@ -146,13 +146,13 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="flex items-center gap-3 mb-6">
-              <span className="text-3xl font-bold">₹{product.price.toFixed(2)}</span>
+              <span className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">₹{product.price.toFixed(2)}</span>
               {product.originalPrice && (
                 <span className="text-xl text-muted-foreground line-through">₹{product.originalPrice.toFixed(2)}</span>
               )}
             </div>
 
-            <p className="text-muted-foreground mb-6">{product.description}</p>
+            <p className="text-muted-foreground mb-6 leading-relaxed">{product.description}</p>
 
             <div className="mb-6">
               {product.stockQuantity > 0 ? (
@@ -165,18 +165,23 @@ export default function ProductDetailPage() {
             {/* Quantity Selector */}
             <div className="flex items-center gap-4 mb-6">
               <span className="text-sm font-medium">Quantity:</span>
-              <div className="flex items-center border rounded-md">
+              <div className="flex items-center border rounded-lg">
                 <Button variant="ghost" size="icon" onClick={() => setQuantity(Math.max(1, quantity - 1))}>
                   <Minus className="h-4 w-4" />
                 </Button>
-                <span className="w-12 text-center">{quantity}</span>
+                <span className="w-12 text-center font-medium">{quantity}</span>
                 <Button variant="ghost" size="icon" onClick={() => setQuantity(Math.min(product.stockQuantity, quantity + 1))}>
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
             </div>
 
-            <Button size="lg" className="w-full" onClick={handleAddToCart} disabled={product.stockQuantity === 0}>
+            <Button
+              size="lg"
+              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg shadow-indigo-500/25 text-base py-6"
+              onClick={handleAddToCart}
+              disabled={product.stockQuantity === 0}
+            >
               <ShoppingCart className="h-5 w-5 mr-2" />
               Add to Cart
             </Button>

@@ -70,17 +70,20 @@ export default function ContactPage() {
     <div className="min-h-screen">
       <Header />
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-3xl font-bold mb-4">Contact Us</h1>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Get in touch with our team. We're here to help you with any questions or concerns you may have.
-            </p>
-          </div>
+      {/* Gradient Header Banner */}
+      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 py-12">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-3xl font-bold text-white mb-3">Contact Us</h1>
+          <p className="text-white/80 max-w-2xl mx-auto">
+            Get in touch with our team. We're here to help you with any questions or concerns you may have.
+          </p>
+        </div>
+      </div>
 
+      <div className="container mx-auto px-4 py-10">
+        <div className="max-w-4xl mx-auto">
           <div className="grid gap-8 md:grid-cols-2">
-            <Card>
+            <Card className="shadow-lg border-0 shadow-indigo-500/5">
               <CardHeader>
                 <CardTitle>Send us a Message</CardTitle>
               </CardHeader>
@@ -91,7 +94,7 @@ export default function ContactPage() {
                     <p className="text-green-700 text-sm">{statusMessage}</p>
                   </div>
                 )}
-                
+
                 {status === 'error' && (
                   <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
                     <AlertCircle className="h-5 w-5 text-red-600" />
@@ -103,22 +106,22 @@ export default function ContactPage() {
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div>
                       <label className="text-sm font-medium mb-2 block">First Name *</label>
-                      <Input 
+                      <Input
                         name="firstName"
                         value={formData.firstName}
                         onChange={handleInputChange}
-                        placeholder="Your first name" 
+                        placeholder="Your first name"
                         required
                         disabled={loading}
                       />
                     </div>
                     <div>
                       <label className="text-sm font-medium mb-2 block">Last Name *</label>
-                      <Input 
+                      <Input
                         name="lastName"
                         value={formData.lastName}
                         onChange={handleInputChange}
-                        placeholder="Your last name" 
+                        placeholder="Your last name"
                         required
                         disabled={loading}
                       />
@@ -126,23 +129,23 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <label className="text-sm font-medium mb-2 block">Email *</label>
-                    <Input 
+                    <Input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      placeholder="your.email@example.com" 
+                      placeholder="your.email@example.com"
                       required
                       disabled={loading}
                     />
                   </div>
                   <div>
                     <label className="text-sm font-medium mb-2 block">Subject *</label>
-                    <Input 
+                    <Input
                       name="subject"
                       value={formData.subject}
                       onChange={handleInputChange}
-                      placeholder="What's this about?" 
+                      placeholder="What's this about?"
                       required
                       disabled={loading}
                     />
@@ -159,7 +162,7 @@ export default function ContactPage() {
                       disabled={loading}
                     />
                   </div>
-                  <Button type="submit" className="w-full" disabled={loading}>
+                  <Button type="submit" className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white" disabled={loading}>
                     {loading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -174,27 +177,33 @@ export default function ContactPage() {
             </Card>
 
             <div className="space-y-6">
-              <Card>
+              <Card className="shadow-lg border-0 shadow-indigo-500/5">
                 <CardHeader>
                   <CardTitle>Get in Touch</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center space-x-3">
-                    <Mail className="h-5 w-5 text-primary" />
+                    <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-primary/10">
+                      <Mail className="h-5 w-5 text-primary" />
+                    </div>
                     <div>
                       <p className="font-medium">Email</p>
                       <p className="text-sm text-muted-foreground">varunbali47@gmail.com.com</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Phone className="h-5 w-5 text-primary" />
+                    <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-primary/10">
+                      <Phone className="h-5 w-5 text-primary" />
+                    </div>
                     <div>
                       <p className="font-medium">Phone</p>
                       <p className="text-sm text-muted-foreground">+91 9996094192</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Clock className="h-5 w-5 text-primary" />
+                    <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-primary/10">
+                      <Clock className="h-5 w-5 text-primary" />
+                    </div>
                     <div>
                       <p className="font-medium">Business Hours</p>
                       <p className="text-sm text-muted-foreground">
@@ -207,7 +216,7 @@ export default function ContactPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="shadow-lg border-0 shadow-indigo-500/5">
                 <CardHeader>
                   <CardTitle>FAQ</CardTitle>
                 </CardHeader>

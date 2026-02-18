@@ -96,39 +96,53 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <Header />
-      
-      <section className="bg-gradient-to-r from-primary/10 to-primary/5 py-20">
-        <div className="container mx-auto px-4">
+
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 py-24 md:py-32">
+        {/* Decorative blur shapes */}
+        <div className="absolute top-[-10%] left-[-5%] h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+        <div className="absolute bottom-[-10%] right-[-5%] h-96 w-96 rounded-full bg-pink-400/20 blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-indigo-400/10 blur-2xl" />
+
+        <div className="container relative z-10 mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-              Discover Amazing Products
+            <h1 className="animate-fade-in text-4xl md:text-6xl font-bold tracking-tight mb-6 text-white">
+              Discover{" "}
+              <span className="bg-gradient-to-r from-yellow-200 via-pink-200 to-white bg-clip-text text-transparent">
+                Amazing Products
+              </span>
             </h1>
-            <p className="text-xl text-muted-foreground mb-8">
+            <p className="animate-slide-up text-xl text-white/80 mb-10">
               Shop the latest trends and discover unique finds from top brands around the world
             </p>
-            <Link href="/products">
-              <Button size="lg" className="mr-4">
-                Shop Now
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-            <Link href="/categories">
-              <Button variant="outline" size="lg">
-                Explore Categories
-              </Button>
-            </Link>
+            <div className="animate-slide-up flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="/products">
+                <Button size="lg" className="bg-white text-indigo-700 hover:bg-white/90 shadow-lg shadow-indigo-900/30 font-semibold px-8">
+                  Shop Now
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+              <Link href="/categories">
+                <Button variant="outline" size="lg" className="border-white/40 text-white hover:bg-white/10 px-8">
+                  Explore Categories
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="py-16">
+      {/* Features Section */}
+      <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Card key={index}>
-                <CardContent className="p-6 text-center">
-                  <feature.icon className="h-12 w-12 mx-auto mb-4 text-primary" />
-                  <h3 className="font-semibold mb-2">{feature.title}</h3>
+              <Card key={index} className="transition-all duration-300 hover:-translate-y-1 hover:shadow-lg border-0 shadow-sm">
+                <CardContent className="p-8 text-center">
+                  <div className="inline-flex items-center justify-center h-14 w-14 rounded-xl bg-primary/10 mb-5">
+                    <feature.icon className="h-7 w-7 text-primary" />
+                  </div>
+                  <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
                   <p className="text-sm text-muted-foreground">{feature.description}</p>
                 </CardContent>
               </Card>
@@ -137,16 +151,17 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16">
+      {/* Featured Products Section */}
+      <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Featured Products</h2>
-            <p className="text-muted-foreground">Discover our most popular items</p>
+            <p className="text-muted-foreground max-w-xl mx-auto">Discover our most popular items handpicked just for you</p>
           </div>
           {loading ? (
             <div className="flex items-center justify-center h-64">
               <div className="text-center">
-                <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+                <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
                 <p className="text-muted-foreground">Loading featured products...</p>
               </div>
             </div>
@@ -159,8 +174,9 @@ export default function Home() {
           )}
           <div className="text-center mt-12">
             <Link href="/products">
-              <Button variant="outline" size="lg">
+              <Button variant="outline" size="lg" className="px-8">
                 View All Products
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </div>

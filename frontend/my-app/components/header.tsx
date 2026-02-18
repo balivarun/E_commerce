@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { Menu, Search, ShoppingCart, X, LogOut, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -16,6 +16,7 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState("")
   const [showUserMenu, setShowUserMenu] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
   const { state: authState, logout } = useAuth()
   const { state } = useCart()
 
@@ -46,6 +47,11 @@ export function Header() {
     router.push("/")
   }
 
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/"
+    return pathname.startsWith(href)
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center px-4">
@@ -58,7 +64,7 @@ export function Header() {
               height={32}
               className="rounded"
             />
-            <span className="hidden font-bold sm:inline-block">
+            <span className="hidden font-bold sm:inline-block bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
               ShopSphere
             </span>
           </Link>
@@ -83,16 +89,20 @@ export function Header() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyPress={handleKeyPress}
-                className="w-full rounded-md border border-input bg-background px-8 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:w-[300px] lg:w-[400px]"
+                className="w-full rounded-md border border-input bg-background px-8 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:w-[300px] lg:w-[400px] transition-shadow"
               />
             </form>
           </div>
-          <nav className="hidden md:flex md:items-center md:space-x-6">
+          <nav className="hidden md:flex md:items-center md:space-x-1">
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-sm font-medium transition-colors hover:text-primary"
+                className={`text-sm font-medium px-3 py-2 rounded-md transition-colors ${
+                  isActive(item.href)
+                    ? "text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+                }`}
               >
                 {item.name}
               </Link>
@@ -105,7 +115,7 @@ export function Header() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="relative h-8 w-8 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+                  className="relative h-8 w-8 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:opacity-90"
                   onClick={() => setShowUserMenu(!showUserMenu)}
                 >
                   <span className="text-sm font-medium">
@@ -113,14 +123,14 @@ export function Header() {
                   </span>
                 </Button>
                 {showUserMenu && (
-                  <div className="absolute right-0 top-10 z-50 w-56 rounded-md border bg-background p-2 shadow-lg">
+                  <div className="absolute right-0 top-10 z-50 w-56 rounded-lg border bg-background p-2 shadow-xl animate-scale-in origin-top-right">
                     <div className="border-b px-3 py-2 mb-1">
                       <p className="text-sm font-medium">{authState.user.name}</p>
                       <p className="text-xs text-muted-foreground">{authState.user.email}</p>
                     </div>
                     <Link
                       href="/my-orders"
-                      className="flex items-center gap-2 rounded-sm px-3 py-2 text-sm hover:bg-accent"
+                      className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent transition-colors"
                       onClick={() => setShowUserMenu(false)}
                     >
                       <User className="h-4 w-4" />
@@ -128,7 +138,7 @@ export function Header() {
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="flex w-full items-center gap-2 rounded-sm px-3 py-2 text-sm text-destructive hover:bg-accent"
+                      className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-destructive hover:bg-accent transition-colors"
                     >
                       <LogOut className="h-4 w-4" />
                       Sign Out
@@ -162,13 +172,17 @@ export function Header() {
       </div>
 
       {isMenuOpen && (
-        <div className="border-t md:hidden">
-          <nav className="container mx-auto flex flex-col space-y-2 p-4">
+        <div className="border-t md:hidden animate-slide-up">
+          <nav className="container mx-auto flex flex-col space-y-1 p-4">
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-sm font-medium transition-colors hover:text-primary"
+                className={`text-sm font-medium px-3 py-2 rounded-md transition-colors ${
+                  isActive(item.href)
+                    ? "text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+                }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.name}

@@ -37,7 +37,7 @@ export default function CartPage() {
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-2xl mx-auto text-center">
             <h1 className="text-3xl font-bold mb-4">Your Cart</h1>
-            <div className="bg-muted/50 rounded-lg p-12">
+            <div className="bg-muted/50 rounded-2xl p-12">
               <div className="text-muted-foreground mb-6">
                 <svg
                   className="h-16 w-16 mx-auto mb-4"
@@ -56,7 +56,7 @@ export default function CartPage() {
                 <p>Looks like you haven't added any items to your cart yet.</p>
               </div>
               <Link href="/products">
-                <Button size="lg">
+                <Button size="lg" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white">
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Continue Shopping
                 </Button>
@@ -88,14 +88,14 @@ export default function CartPage() {
             </div>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-3">
+          <div className="grid gap-8 lg:grid-cols-3">
             <div className="lg:col-span-2">
               <div className="space-y-4">
                 {state.items.map((item) => (
-                  <Card key={item.id}>
+                  <Card key={item.id} className="transition-all duration-200 hover:shadow-md">
                     <CardContent className="p-6">
                       <div className="flex gap-4">
-                        <div className="relative h-20 w-20 overflow-hidden rounded-md">
+                        <div className="relative h-20 w-20 overflow-hidden rounded-lg">
                           <Image
                             src={item.image}
                             alt={item.name}
@@ -105,7 +105,7 @@ export default function CartPage() {
                         </div>
                         <div className="flex-1">
                           <h3 className="font-semibold line-clamp-2">{item.name}</h3>
-                          <p className="text-lg font-bold mt-1">₹{item.price.toFixed(2)}</p>
+                          <p className="text-lg font-bold mt-1 text-primary">₹{item.price.toFixed(2)}</p>
                         </div>
                         <div className="flex items-center gap-2">
                           <Button
@@ -146,7 +146,7 @@ export default function CartPage() {
                   </Card>
                 ))}
               </div>
-              
+
               <div className="mt-6 flex justify-between items-center">
                 <Button variant="outline" onClick={clearCart}>
                   Clear Cart
@@ -160,38 +160,39 @@ export default function CartPage() {
             </div>
 
             <div className="lg:col-span-1">
-              <Card className="sticky top-6">
+              <Card className="sticky top-20 overflow-hidden">
+                <div className="h-1 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500" />
                 <CardContent className="p-6">
                   <h3 className="font-semibold text-lg mb-4">Order Summary</h3>
-                  
-                  <div className="space-y-2 mb-4">
-                    <div className="flex justify-between">
-                      <span>Subtotal</span>
+
+                  <div className="space-y-3 mb-4">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Subtotal</span>
                       <span>₹{state.total.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Shipping</span>
-                      <span>Free</span>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Shipping</span>
+                      <span className="text-green-600 font-medium">Free</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Tax</span>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Tax</span>
                       <span>₹{(state.total * 0.1).toFixed(2)}</span>
                     </div>
-                    <div className="border-t pt-2 mt-2">
+                    <div className="border-t pt-3 mt-3">
                       <div className="flex justify-between font-bold text-lg">
                         <span>Total</span>
-                        <span>₹{finalAmountInINR.toFixed(2)}</span>
+                        <span className="text-primary">₹{finalAmountInINR.toFixed(2)}</span>
                       </div>
                     </div>
                   </div>
-                  
+
                   <RazorpayCheckout
                     amount={finalAmountInINR}
                     onSuccess={handlePaymentSuccess}
                     onError={handlePaymentError}
                   />
-                  
-                  <p className="text-xs text-muted-foreground text-center mt-2">
+
+                  <p className="text-xs text-muted-foreground text-center mt-3">
                     Secure checkout with SSL encryption
                   </p>
                 </CardContent>

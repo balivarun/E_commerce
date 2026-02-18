@@ -52,8 +52,14 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <main className="flex flex-1 items-center justify-center px-4 py-12">
-        <Card className="w-full max-w-md">
+      <main className="flex flex-1 items-center justify-center px-4 py-12 relative">
+        {/* Decorative background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 -left-32 h-64 w-64 rounded-full bg-purple-500/10 blur-3xl" />
+          <div className="absolute bottom-1/4 -right-32 h-64 w-64 rounded-full bg-indigo-500/10 blur-3xl" />
+        </div>
+
+        <Card className="w-full max-w-md relative animate-slide-up shadow-xl border-0 shadow-purple-500/5">
           <CardHeader className="space-y-1 text-center">
             <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
             <CardDescription>Enter your details to get started</CardDescription>
@@ -122,7 +128,7 @@ export default function RegisterPage() {
               </div>
             </CardContent>
             <CardFooter className="flex flex-col space-y-4">
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button type="submit" className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white" disabled={loading}>
                 {loading ? (
                   "Creating account..."
                 ) : (

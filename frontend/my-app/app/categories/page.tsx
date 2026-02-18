@@ -102,7 +102,7 @@ export default function CategoriesPage() {
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-center h-96">
             <div className="text-center">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
               <p className="text-muted-foreground">Loading categories...</p>
             </div>
           </div>
@@ -120,7 +120,7 @@ export default function CategoriesPage() {
           <div className="flex items-center justify-center h-96">
             <div className="text-center">
               <p className="text-destructive mb-4">Error: {error}</p>
-              <button 
+              <button
                 onClick={() => window.location.reload()}
                 className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
               >
@@ -137,7 +137,7 @@ export default function CategoriesPage() {
   return (
     <div className="min-h-screen">
       <Header />
-      
+
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold mb-4">Shop by Categories</h1>
@@ -149,15 +149,15 @@ export default function CategoriesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
             <Link key={category.id} href={category.href}>
-              <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105">
+              <Card className="group overflow-hidden transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <Image
                     src={category.image}
                     alt={category.name}
                     fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-110"
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-black/40 transition-opacity group-hover:bg-black/50" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent transition-all duration-300 group-hover:from-indigo-900/70 group-hover:via-indigo-900/30" />
                   <div className="absolute inset-0 flex items-end p-6">
                     <div className="text-white">
                       <h3 className="text-xl font-bold mb-1">{category.name}</h3>
@@ -173,7 +173,7 @@ export default function CategoriesPage() {
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <span className="font-medium">{category.name}</span>
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-2 text-primary" />
                   </div>
                 </CardContent>
               </Card>
@@ -186,9 +186,9 @@ export default function CategoriesPage() {
           <p className="text-muted-foreground mb-6">
             Use our search feature or browse all products
           </p>
-          <Link 
+          <Link
             href="/products"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+            className="inline-flex items-center justify-center rounded-md bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-indigo-500/25 transition-all"
           >
             Browse All Products
             <ArrowRight className="ml-2 h-4 w-4" />

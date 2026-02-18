@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
-import { Search, Filter, Loader2 } from "lucide-react"
+import { Search, Filter, Loader2, PackageOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Header } from "@/components/header"
@@ -135,7 +135,7 @@ function ProductsContent() {
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-center h-96">
             <div className="text-center">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
               <p className="text-muted-foreground">Loading products...</p>
             </div>
           </div>
@@ -167,27 +167,30 @@ function ProductsContent() {
   return (
     <div className="min-h-screen">
       <Header />
-      
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-4">
-            {urlSearchQuery 
+
+      {/* Gradient Header Banner */}
+      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 py-10">
+        <div className="container mx-auto px-4">
+          <h1 className="text-3xl font-bold text-white mb-2">
+            {urlSearchQuery
               ? `Search Results for "${urlSearchQuery}"`
-              : categoryFilter 
-                ? `${categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1)} Products` 
+              : categoryFilter
+                ? `${categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1)} Products`
                 : 'All Products'
             }
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-white/80">
             {urlSearchQuery
               ? `Found ${filteredAndSortedProducts.length} products matching "${urlSearchQuery}"`
-              : categoryFilter 
+              : categoryFilter
                 ? `Explore our ${categoryFilter} collection (${products.length} items)`
                 : `Discover our complete collection of quality products (${products.length} items)`
             }
           </p>
         </div>
+      </div>
 
+      <div className="container mx-auto px-4 py-8">
         <div className="mb-6 flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -224,8 +227,10 @@ function ProductsContent() {
               <ProductCard key={product.id} product={product} />
             ))
           ) : (
-            <div className="col-span-full text-center py-12">
-              <p className="text-muted-foreground">No products found matching your search.</p>
+            <div className="col-span-full text-center py-16">
+              <PackageOpen className="h-16 w-16 mx-auto mb-4 text-muted-foreground/50" />
+              <h3 className="text-lg font-semibold mb-2">No products found</h3>
+              <p className="text-muted-foreground">Try adjusting your search or filter criteria.</p>
             </div>
           )}
         </div>
@@ -244,7 +249,7 @@ export default function ProductsPage() {
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-center h-96">
             <div className="text-center">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
               <p className="text-muted-foreground">Loading...</p>
             </div>
           </div>
