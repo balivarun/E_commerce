@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/contexts/auth-context";
 import { CartProvider } from "@/contexts/cart-context";
+import { WishlistProvider } from "@/contexts/wishlist-context";
 
 export const metadata: Metadata = {
   title: "ShopSphere - Modern E-commerce",
@@ -28,7 +29,9 @@ export default function RootLayout({
         >
           <AuthProvider>
             <CartProvider>
-              {children}
+              <WishlistProvider>
+                {children}
+              </WishlistProvider>
             </CartProvider>
           </AuthProvider>
         </ThemeProvider>

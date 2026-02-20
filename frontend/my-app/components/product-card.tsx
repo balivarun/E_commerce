@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useCart } from "@/contexts/cart-context"
+import { useWishlist } from "@/contexts/wishlist-context"
 
 interface Product {
   id: string
@@ -26,6 +27,24 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart()
+  const { addItem: addToWishlist, removeItem: removeFromWishlist, isWishlisted } = useWishlist()
+
+  const wishlisted = isWishlisted(product.id)
+
+  const handleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault()
+    if (wishlisted) {
+      removeFromWishlist(product.id)
+    } else {
+      addToWishlist({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        rating: product.rating,
+      })
+    }
+  }
 
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
@@ -64,9 +83,9 @@ export function ProductCard({ product }: ProductCardProps) {
             variant="ghost"
             size="icon"
             className="absolute top-2 right-2 opacity-0 transition-all duration-300 group-hover:opacity-100 bg-white/80 hover:bg-white text-foreground rounded-full h-8 w-8"
-            onClick={(e) => e.preventDefault()}
+            onClick={handleWishlist}
           >
-            <Heart className="h-4 w-4" />
+            <Heart className={`h-4 w-4 ${wishlisted ? 'fill-red-500 text-red-500' : ''}`} />
           </Button>
         </div>
 

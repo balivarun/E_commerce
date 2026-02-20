@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter, usePathname } from "next/navigation"
-import { Menu, Search, ShoppingCart, X, LogOut, User } from "lucide-react"
+import { Menu, Search, ShoppingCart, X, LogOut, User, Package, Heart, MapPin, Bell } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Badge } from "@/components/ui/badge"
@@ -123,26 +123,45 @@ export function Header() {
                   </span>
                 </Button>
                 {showUserMenu && (
-                  <div className="absolute right-0 top-10 z-50 w-56 rounded-lg border bg-background p-2 shadow-xl animate-scale-in origin-top-right">
-                    <div className="border-b px-3 py-2 mb-1">
-                      <p className="text-sm font-medium">{authState.user.name}</p>
-                      <p className="text-xs text-muted-foreground">{authState.user.email}</p>
+                  <div className="absolute right-0 top-10 z-50 w-64 rounded-lg border bg-background shadow-xl origin-top-right">
+                    {/* Account Header */}
+                    <div className="px-4 py-3 border-b">
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Your Account</p>
+                      <p className="text-sm font-medium mt-0.5">{authState.user.name}</p>
+                      <p className="text-xs text-muted-foreground truncate">{authState.user.email}</p>
                     </div>
-                    <Link
-                      href="/my-orders"
-                      className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent transition-colors"
-                      onClick={() => setShowUserMenu(false)}
-                    >
-                      <User className="h-4 w-4" />
-                      My Orders
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-destructive hover:bg-accent transition-colors"
-                    >
-                      <LogOut className="h-4 w-4" />
-                      Sign Out
-                    </button>
+
+                    {/* Menu Items */}
+                    <div className="py-1">
+                      {[
+                        { href: '/profile', icon: User, label: 'My Profile' },
+                        { href: '/my-orders', icon: Package, label: 'My Orders' },
+                        { href: '/wishlist', icon: Heart, label: 'Wishlist' },
+                        { href: '/addresses', icon: MapPin, label: 'Saved Addresses' },
+                        { href: '/notifications', icon: Bell, label: 'Notifications' },
+                      ].map(({ href, icon: Icon, label }) => (
+                        <Link
+                          key={href}
+                          href={href}
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-accent transition-colors"
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          <Icon className="h-4 w-4 text-muted-foreground" />
+                          {label}
+                        </Link>
+                      ))}
+                    </div>
+
+                    {/* Logout */}
+                    <div className="border-t py-1">
+                      <button
+                        onClick={handleLogout}
+                        className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-destructive hover:bg-accent transition-colors"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Logout
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
