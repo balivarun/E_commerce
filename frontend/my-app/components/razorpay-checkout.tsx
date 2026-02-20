@@ -17,10 +17,20 @@ interface RazorpayCheckoutProps {
   onError?: (error: any) => void
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
+
 export function RazorpayCheckout({ amount, onSuccess, onError }: RazorpayCheckoutProps) {
   const [loading, setLoading] = useState(false)
-  const { clearCart } = useCart()
+  const { state: cartState, clearCart } = useCart()
   const { state: authState } = useAuth()
+
+  const getHeaders = () => {
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+    if (authState.token) {
+      headers['Authorization'] = `Bearer ${authState.token}`
+    }
+    return headers
+  }
 
   const handlePayment = async () => {
     if (!window.Razorpay) {
@@ -31,13 +41,20 @@ export function RazorpayCheckout({ amount, onSuccess, onError }: RazorpayCheckou
     setLoading(true)
 
     try {
-      // Create order on server
-      const response = await fetch('/api/create-order', {
+      // Create order on backend — saves to MongoDB with cart items
+      const response = await fetch(`${API_URL}/create-order`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ amount }),
+        headers: getHeaders(),
+        body: JSON.stringify({
+          amount,
+          currency: 'INR',
+          orderItems: cartState.items.map(item => ({
+            productId: item.id,
+            productName: item.name,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+        }),
       })
 
       const order = await response.json()
@@ -56,12 +73,10 @@ export function RazorpayCheckout({ amount, onSuccess, onError }: RazorpayCheckou
         order_id: order.id,
         handler: async function (response: any) {
           try {
-            // Verify payment on server
-            const verifyResponse = await fetch('/api/verify-payment', {
+            // Verify payment on backend — updates order status to PAID in MongoDB
+            const verifyResponse = await fetch(`${API_URL}/verify-payment`, {
               method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
+              headers: getHeaders(),
               body: JSON.stringify({
                 orderId: response.razorpay_order_id,
                 paymentId: response.razorpay_payment_id,
@@ -74,7 +89,7 @@ export function RazorpayCheckout({ amount, onSuccess, onError }: RazorpayCheckou
             if (verifyResult.success) {
               clearCart()
               onSuccess?.()
-              alert('Payment successful!')
+              alert('Payment successful! View your order in My Orders.')
             } else {
               throw new Error('Payment verification failed')
             }
@@ -92,10 +107,10 @@ export function RazorpayCheckout({ amount, onSuccess, onError }: RazorpayCheckou
           color: '#3B82F6',
         },
         modal: {
-          ondismiss: function() {
+          ondismiss: function () {
             setLoading(false)
-          }
-        }
+          },
+        },
       }
 
       const razorpay = new window.Razorpay(options)
