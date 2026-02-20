@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { ArrowRight, Truck, Shield, Headphones, Loader2 } from "lucide-react"
+import { ArrowRight, Truck, Shield, Headphones } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Header } from "@/components/header"
@@ -38,6 +38,49 @@ interface Product {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
 
+const sampleProducts: Product[] = [
+  {
+    id: 'sample-1',
+    name: 'MacBook Air M2',
+    price: 89999,
+    originalPrice: 99999,
+    image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=904&h=840&fit=crop',
+    rating: 4.8,
+    reviews: 245,
+    isNew: true,
+    isOnSale: true,
+  },
+  {
+    id: 'sample-2',
+    name: 'iPhone 14 Pro',
+    price: 99999,
+    image: 'https://images.unsplash.com/photo-1678685888221-cda773a3dcdb?w=940&h=1112&fit=crop',
+    rating: 4.9,
+    reviews: 189,
+    isNew: true,
+  },
+  {
+    id: 'sample-3',
+    name: 'AirPods Pro',
+    price: 24999,
+    originalPrice: 29999,
+    image: 'https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=572&h=572&fit=crop',
+    rating: 4.7,
+    reviews: 324,
+    isOnSale: true,
+  },
+  {
+    id: 'sample-4',
+    name: 'Samsung Galaxy Watch 6',
+    price: 27999,
+    originalPrice: 31999,
+    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=800&fit=crop',
+    rating: 4.5,
+    reviews: 132,
+    isOnSale: true,
+  },
+]
+
 const features = [
   {
     icon: Truck,
@@ -57,18 +100,17 @@ const features = [
 ]
 
 export default function Home() {
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>(sampleProducts)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
       try {
-        setLoading(true)
         const response = await fetch(`${API_URL}/products/featured?limit=4`)
-        if (!response.ok) {
-          throw new Error('Failed to fetch products')
-        }
+        if (!response.ok) return
+
         const backendProducts: BackendProduct[] = await response.json()
+        if (!backendProducts.length) return
 
         const transformedProducts: Product[] = backendProducts.map((product) => ({
           id: product.id,
@@ -84,9 +126,7 @@ export default function Home() {
 
         setFeaturedProducts(transformedProducts)
       } catch (err) {
-        console.error('Failed to fetch featured products:', err)
-      } finally {
-        setLoading(false)
+        // Keep showing sample products if backend is unavailable
       }
     }
 
@@ -158,20 +198,11 @@ export default function Home() {
             <h2 className="text-3xl font-bold mb-4">Featured Products</h2>
             <p className="text-muted-foreground max-w-xl mx-auto">Discover our most popular items handpicked just for you</p>
           </div>
-          {loading ? (
-            <div className="flex items-center justify-center h-64">
-              <div className="text-center">
-                <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
-                <p className="text-muted-foreground">Loading featured products...</p>
-              </div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {featuredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {featuredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
           <div className="text-center mt-12">
             <Link href="/products">
               <Button variant="outline" size="lg" className="px-8">
