@@ -123,7 +123,7 @@ export default function Home() {
                 </Button>
               </Link>
               <Link href="/categories">
-                <Button variant="outline" size="lg" className="border-white/40 text-white hover:bg-white/10 px-8">
+                <Button variant="outline" size="lg" className="border-white/40 text-white hover:bg-white/10 bg-transparent px-8">
                   Explore Categories
                 </Button>
               </Link>
