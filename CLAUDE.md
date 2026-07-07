@@ -83,8 +83,6 @@ All routes are served under `/api` (`server.servlet.context-path=/api`). Standar
 4. Frontend calls `POST /api/verify-payment`; `RazorpayService.verifyPaymentSignature` recomputes an HMAC-SHA256 over `orderId|paymentId` using the Razorpay key secret and compares it to the given signature; on match the order is marked PAID, otherwise FAILED
 5. Amounts are sent to Razorpay in paise as an integer (`Math.round(amount * 100)`); currency is `"INR"`
 
-**Stripe migration in progress (not yet wired up):** `service/StripeService.java`, `components/stripe-checkout.tsx`, and `lib/stripe.ts` exist but are unused — `OrderController` still depends on `RazorpayService`, `build.gradle` only declares the Razorpay SDK, and `app/cart/page.tsx` still renders `RazorpayCheckout`, not `StripeCheckout`. Don't assume the Stripe flow is live until `OrderController` is repointed at `StripeService` and the `stripe` / `@stripe/stripe-js` / `@stripe/react-stripe-js` packages are added to `package.json`.
-
 ### Security Rules (Spring Security)
 - Public: `GET /products/**`, `GET /categories/**`, `POST /contact`, `POST /create-order`, `POST /verify-payment`, `GET /orders/**`, all `/auth/**`
 - `POST/PUT/DELETE /products/**` require only `.authenticated()` — there is no role check, so any logged-in user (not just admins) can create/update/delete products.
