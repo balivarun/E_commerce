@@ -8,8 +8,8 @@ A full stack e-commerce application built with **Next.js** (frontend) and **Spri
 
 | Service | URL |
 |---------|-----|
-| Frontend | https://e-commerce-lrvl.vercel.app |
-| Backend API | https://e-commerce-1-2nbq.onrender.com/api |
+| Frontend | https://e-commerce-five-gold-82.vercel.app/ |
+| Backend API | https://e-commerce-1-2nbq.onrender.com |
 
 ---
 
