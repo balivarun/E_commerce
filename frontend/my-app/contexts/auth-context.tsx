@@ -1,6 +1,7 @@
 "use client"
 
 import { createContext, useContext, useReducer, useEffect, ReactNode } from "react"
+import { getApiUrl } from "@/lib/api"
 
 interface User {
   name: string
@@ -52,7 +53,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
   }
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"
+const API_URL = getApiUrl()
 
 interface AuthContextType {
   state: AuthState

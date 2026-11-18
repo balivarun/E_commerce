@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { getApiUrl } from '@/lib/api'
 
 interface BackendProduct {
   id: string
@@ -43,7 +44,7 @@ interface Product {
   isOnSale?: boolean
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
+const API_URL = getApiUrl()
 
 function ProductsContent() {
   const [products, setProducts] = useState<Product[]>([])

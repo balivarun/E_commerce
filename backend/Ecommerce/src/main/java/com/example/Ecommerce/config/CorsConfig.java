@@ -19,13 +19,23 @@ public class CorsConfig implements WebMvcConfigurer {
     private String allowedOrigins;
 
     private List<String> getAllowedOriginsList() {
-        return Arrays.asList(allowedOrigins.split(","));
+        return Arrays.stream(allowedOrigins.split(","))
+            .map(String::trim)
+            .filter(origin -> !origin.isEmpty())
+            .toList();
+    }
+
+    private List<String> getAllowedOriginPatterns() {
+        List<String> patterns = new java.util.ArrayList<>(getAllowedOriginsList());
+        patterns.add("http://localhost:*");
+        patterns.add("https://*.vercel.app");
+        return patterns;
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedOrigins(getAllowedOriginsList().toArray(new String[0]))
+            .allowedOriginPatterns(getAllowedOriginPatterns().toArray(new String[0]))
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*")
             .allowCredentials(true);
@@ -34,7 +44,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(getAllowedOriginsList());
+        configuration.setAllowedOriginPatterns(getAllowedOriginPatterns());
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setExposedHeaders(Arrays.asList("Authorization"));

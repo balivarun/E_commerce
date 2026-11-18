@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { useCart } from "@/contexts/cart-context"
+import { getApiUrl } from '@/lib/api'
 
 interface Product {
   id: string
@@ -26,7 +27,7 @@ interface Product {
   stockQuantity: number
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
+const API_URL = getApiUrl()
 
 export default function ProductDetailPage() {
   const { id } = useParams()

@@ -7,8 +7,9 @@ import { useAuth } from '@/contexts/auth-context'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Package, ShoppingBag, CheckCircle, XCircle, Clock } from 'lucide-react'
+import { getApiUrl } from '@/lib/api'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
+const API_URL = getApiUrl()
 
 interface OrderItem {
   productId: string

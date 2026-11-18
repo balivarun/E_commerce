@@ -7,6 +7,7 @@ import { ArrowRight, Loader2 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { getApiUrl } from '@/lib/api'
 
 interface BackendProduct {
   id: string
@@ -32,7 +33,7 @@ interface Category {
   href: string
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
+const API_URL = getApiUrl()
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([])

@@ -2,24 +2,33 @@ package com.example.Ecommerce.config;
 
 import com.example.Ecommerce.entity.Product;
 import com.example.Ecommerce.repository.ProductRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
-    
+
+    private static final Logger log = LoggerFactory.getLogger(DataInitializer.class);
+
     @Autowired
     private ProductRepository productRepository;
-    
+
     @Override
-    public void run(String... args) throws Exception {
-        // Check if products already exist
-        if (productRepository.count() == 0) {
-            initializeProducts();
+    public void run(String... args) {
+        try {
+            // Check if products already exist
+            if (productRepository.count() == 0) {
+                initializeProducts();
+            }
+        } catch (Exception ex) {
+            log.error("MongoDB is unavailable; sample-product initialization was skipped. "
+                    + "Check MONGODB_URI, Atlas cluster status, and network/DNS access.", ex);
         }
     }
-    
+
     private void initializeProducts() {
         // Electronics
         Product laptop = new Product("MacBook Air M2", 89999.0, "Apple MacBook Air with M2 chip, 8-core CPU, 8-core GPU, 8GB unified memory, 256GB SSD storage", "electronics", "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=904&h=840&fit=crop");

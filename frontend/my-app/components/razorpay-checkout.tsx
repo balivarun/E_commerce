@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/contexts/cart-context'
 import { useAuth } from '@/contexts/auth-context'
+import { getApiUrl } from '@/lib/api'
 
 declare global {
   interface Window {
@@ -17,7 +18,7 @@ interface RazorpayCheckoutProps {
   onError?: (error: any) => void
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'
+const API_URL = getApiUrl()
 
 export function RazorpayCheckout({ amount, onSuccess, onError }: RazorpayCheckoutProps) {
   const [loading, setLoading] = useState(false)
