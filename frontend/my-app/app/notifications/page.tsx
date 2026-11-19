@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/auth-context'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Bell, ShoppingBag, Tag, Truck, CheckCircle, Info } from 'lucide-react'
+import { PageHeader } from '@/components/page-header'
 
 interface Notification {
   id: string
@@ -89,6 +90,7 @@ export default function NotificationsPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
+      <PageHeader eyebrow="Your account" title="Notifications" description="Stay updated about orders, promotions, and account activity." icon={Bell} />
       <main className="flex-1 container mx-auto px-4 py-10 max-w-2xl">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">

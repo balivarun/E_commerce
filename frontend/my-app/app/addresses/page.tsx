@@ -3,10 +3,11 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/auth-context'
-import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { MapPin, Plus, Trash2, Home, Briefcase } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/page-header'
+import { Header } from '@/components/header'
 
 interface Address {
   id: string
@@ -74,6 +75,7 @@ export default function AddressesPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
+      <PageHeader eyebrow="Your account" title="Saved addresses" description="Manage delivery locations for faster and easier checkout." icon={MapPin} />
       <main className="flex-1 container mx-auto px-4 py-10 max-w-3xl">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">

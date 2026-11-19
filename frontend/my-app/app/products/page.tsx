@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { getApiUrl } from '@/lib/api'
+import { PageHeader } from '@/components/page-header'
 
 interface BackendProduct {
   id: string
@@ -169,27 +170,19 @@ function ProductsContent() {
     <div className="min-h-screen">
       <Header />
 
-      {/* Gradient Header Banner */}
-      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 py-10">
-        <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold text-white mb-2">
-            {urlSearchQuery
-              ? `Search Results for "${urlSearchQuery}"`
-              : categoryFilter
-                ? `${categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1)} Products`
-                : 'All Products'
-            }
-          </h1>
-          <p className="text-white/80">
-            {urlSearchQuery
-              ? `Found ${filteredAndSortedProducts.length} products matching "${urlSearchQuery}"`
-              : categoryFilter
-                ? `Explore our ${categoryFilter} collection (${products.length} items)`
-                : `Discover our complete collection of quality products (${products.length} items)`
-            }
-          </p>
-        </div>
-      </div>
+      {/* Premium Page Header */}
+      <PageHeader
+        eyebrow={categoryFilter ? 'Category collection' : 'Curated collection'}
+        title={urlSearchQuery
+          ? `Results for “${urlSearchQuery}”`
+          : categoryFilter
+            ? `${categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1)} Products`
+            : 'Explore all products'}
+        description={urlSearchQuery
+          ? `${filteredAndSortedProducts.length} products matched your search`
+          : `${products.length} handpicked products across quality, value, and style`}
+        icon={PackageOpen}
+      />
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6 flex flex-col sm:flex-row gap-4">

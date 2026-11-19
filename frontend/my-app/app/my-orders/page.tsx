@@ -8,6 +8,7 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Package, ShoppingBag, CheckCircle, XCircle, Clock, Truck, PackageCheck, MapPin, CalendarDays } from 'lucide-react'
 import { getApiUrl } from '@/lib/api'
+import { PageHeader } from '@/components/page-header'
 
 const API_URL = getApiUrl()
 
@@ -134,11 +135,11 @@ export default function OrdersPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
+      <PageHeader eyebrow="Your account" title="My orders" description="Track purchases, payments, shipments, and delivery updates." />
 
       <main className="flex-1 container mx-auto px-4 py-10 max-w-4xl">
         <div className="flex items-center gap-3 mb-8">
           <ShoppingBag className="h-7 w-7 text-primary" />
-          <h1 className="text-3xl font-bold">My Orders</h1>
         </div>
 
         {/* Loading */}

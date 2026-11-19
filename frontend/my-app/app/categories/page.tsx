@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { getApiUrl } from '@/lib/api'
+import { PageHeader } from '@/components/page-header'
 
 interface BackendProduct {
   id: string
@@ -139,14 +140,13 @@ export default function CategoriesPage() {
     <div className="min-h-screen">
       <Header />
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold mb-4">Shop by Categories</h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Explore our wide range of product categories and find exactly what you're looking for
-          </p>
-        </div>
+      <PageHeader
+        eyebrow="Discover"
+        title="Shop by category"
+        description="Explore curated collections and find exactly what fits your style, needs, and budget."
+      />
 
+      <div className="container mx-auto px-4 py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
             <Link key={category.id} href={category.href}>

@@ -2,14 +2,17 @@ import { FileText, Shield, AlertTriangle, Scale } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { PageHeader } from '@/components/page-header'
 
 export default function TermsPage() {
   return (
     <div className="min-h-screen">
       <Header />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-10">
         <div className="max-w-4xl mx-auto">
+          <PageHeader eyebrow="Legal" title="Terms of service" description="Important rules and conditions governing ShopSphere accounts and purchases." />
+
           <div className="text-center mb-12">
             <h1 className="text-3xl font-bold mb-4">Terms of Service</h1>
             <p className="text-muted-foreground max-w-2xl mx-auto">

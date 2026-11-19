@@ -8,6 +8,7 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { Heart, ShoppingCart, Trash2, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/page-header'
 
 export default function WishlistPage() {
   const { state, removeItem } = useWishlist()
@@ -21,11 +22,10 @@ export default function WishlistPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
+      <PageHeader title="My Wishlist" />
       <main className="flex-1 container mx-auto px-4 py-10 max-w-5xl">
-        <div className="flex items-center gap-3 mb-8">
-          <Heart className="h-7 w-7 text-red-500 fill-red-500" />
-          <h1 className="text-3xl font-bold">My Wishlist</h1>
-          <span className="text-muted-foreground text-lg">({state.items.length} items)</span>
+        <div className="mb-6 flex items-center justify-between">
+          <p className="text-sm text-muted-foreground">{state.items.length} saved items</p>
         </div>
 
         {/* Empty state */}

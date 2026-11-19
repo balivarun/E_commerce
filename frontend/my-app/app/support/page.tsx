@@ -2,11 +2,13 @@ import Link from "next/link"
 import { Footer } from "@/components/footer"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { PageHeader } from '@/components/page-header'
 
 export default function SupportPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
+      <PageHeader eyebrow="Support center" title="How can we help?" description="Find answers and get help with orders, payments, shipping, and your ShopSphere account." />
       <main className="flex flex-1 items-center justify-center px-4 py-12">
         <Card className="w-full max-w-lg">
           <CardHeader>

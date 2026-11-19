@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { PageHeader } from '@/components/page-header'
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -70,15 +71,12 @@ export default function ContactPage() {
     <div className="min-h-screen">
       <Header />
 
-      {/* Gradient Header Banner */}
-      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 py-12">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-3xl font-bold text-white mb-3">Contact Us</h1>
-          <p className="text-white/80 max-w-2xl mx-auto">
-            Get in touch with our team. We're here to help you with any questions or concerns you may have.
-          </p>
-        </div>
-      </div>
+      {/* Premium Page Header */}
+      <PageHeader
+        eyebrow="We’re here to help"
+        title="Contact us"
+        description="Get in touch with our team for order, payment, shipping, or account support."
+      />
 
       <div className="container mx-auto px-4 py-10">
         <div className="max-w-4xl mx-auto">

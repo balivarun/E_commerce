@@ -9,6 +9,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { useCart } from "@/contexts/cart-context"
 import { RazorpayCheckout } from "@/components/razorpay-checkout"
+import { PageHeader } from '@/components/page-header'
 
 export default function CartPage() {
   const { state, removeItem, updateQuantity, clearCart } = useCart()
@@ -72,6 +73,7 @@ export default function CartPage() {
   return (
     <div className="min-h-screen">
       <Header />
+      <PageHeader eyebrow="Checkout" title="Your cart" description="Review your products and complete your secure checkout." />
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-4 mb-8">
@@ -80,12 +82,6 @@ export default function CartPage() {
                 <ArrowLeft className="h-4 w-4" />
               </Button>
             </Link>
-            <div>
-              <h1 className="text-3xl font-bold">Your Cart</h1>
-              <p className="text-muted-foreground">
-                {state.itemCount} {state.itemCount === 1 ? 'item' : 'items'} in your cart
-              </p>
-            </div>
           </div>
 
           <div className="grid gap-8 lg:grid-cols-3">

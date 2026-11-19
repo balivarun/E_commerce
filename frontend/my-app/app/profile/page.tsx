@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/auth-context'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { User, Mail, Shield } from 'lucide-react'
+import { PageHeader } from '@/components/page-header'
 
 export default function ProfilePage() {
   const { state: authState } = useAuth()
@@ -31,9 +32,8 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
+      <PageHeader eyebrow="Your account" title="My profile" description="Manage your personal details and account information." icon={User} />
       <main className="flex-1 container mx-auto px-4 py-10 max-w-2xl">
-        <h1 className="text-3xl font-bold mb-8">My Profile</h1>
-
         {/* Avatar */}
         <div className="flex flex-col items-center mb-8">
           <div className="h-24 w-24 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center text-white text-4xl font-bold shadow-lg">

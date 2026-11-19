@@ -2,16 +2,18 @@ import { Shield, Eye, Lock, Users } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { PageHeader } from '@/components/page-header'
 
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen">
       <Header />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-10">
         <div className="max-w-4xl mx-auto">
+          <PageHeader eyebrow="Your privacy" title="Privacy policy" description="How ShopSphere collects, uses, and protects your personal information." />
+
           <div className="text-center mb-12">
-            <h1 className="text-3xl font-bold mb-4">Privacy Policy</h1>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Your privacy is important to us. This policy explains how we collect, use, 
               and protect your personal information when you use ShopSphere.
