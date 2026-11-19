@@ -25,6 +25,13 @@ public class RazorpayService {
     private String keySecret;
     
     public Map<String, Object> createOrder(Double amount, String currency) throws RazorpayException {
+        if (keyId == null || keyId.isBlank() || keyId.startsWith("your_")) {
+            throw new IllegalStateException("RAZORPAY_KEY_ID is missing or invalid on the backend");
+        }
+        if (keySecret == null || keySecret.isBlank() || keySecret.startsWith("your_")) {
+            throw new IllegalStateException("RAZORPAY_KEY_SECRET is missing or invalid on the backend");
+        }
+
         RazorpayClient razorpayClient = new RazorpayClient(keyId, keySecret);
         
         JSONObject orderRequest = new JSONObject();
@@ -40,6 +47,7 @@ public class RazorpayService {
         response.put("currency", order.get("currency"));
         response.put("receipt", order.get("receipt"));
         response.put("status", order.get("status"));
+        response.put("keyId", keyId); // Include key ID in the response
         
         return response;
     }

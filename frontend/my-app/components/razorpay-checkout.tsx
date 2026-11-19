@@ -66,7 +66,7 @@ export function RazorpayCheckout({ amount, onSuccess, onError }: RazorpayCheckou
 
       // Configure Razorpay options
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        key: order.keyId || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: order.amount,
         currency: order.currency,
         name: 'ShopSphere',

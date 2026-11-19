@@ -33,6 +33,9 @@ public class OrderController {
             Authentication authentication) {
         try {
             Double amount = ((Number) orderRequest.get("amount")).doubleValue();
+            if (!Double.isFinite(amount) || amount <= 0) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Amount must be greater than zero"));
+            }
             String currency = (String) orderRequest.getOrDefault("currency", "INR");
 
             // Create order in Razorpay
