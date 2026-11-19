@@ -100,7 +100,8 @@ public class OrderController {
 
                 order.setRazorpayPaymentId(paymentId);
                 order.setRazorpaySignature(signature);
-                order.setStatus(Order.OrderStatus.PAID);
+                order.setStatus(Order.OrderStatus.PROCESSING);
+                order.setUpdatedAt(java.time.LocalDateTime.now());
                 orderRepository.save(order);
 
                 response.put("success", true);
@@ -162,6 +163,52 @@ public class OrderController {
                     orderRepository.findByUserIdOrderByCreatedAtDesc(user.getId()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // Update shipment information (admin only)
+    @PutMapping("/orders/{id}/shipment")
+    public ResponseEntity<Object> updateShipment(
+            @PathVariable String id,
+            @RequestBody Map<String, Object> shipment,
+            Authentication authentication) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof User user)
+                || !"ADMIN".equalsIgnoreCase(user.getRole())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Admin access required"));
+        }
+
+        Order order = orderRepository.findById(id).orElse(null);
+        if (order == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        try {
+            String statusValue = (String) shipment.get("status");
+            Order.OrderStatus status = Order.OrderStatus.valueOf(statusValue.toUpperCase());
+            order.setStatus(status);
+
+            if (shipment.get("trackingNumber") != null) {
+                order.setTrackingNumber(shipment.get("trackingNumber").toString());
+            }
+            if (shipment.get("carrier") != null) {
+                order.setCarrier(shipment.get("carrier").toString());
+            }
+            if (status == Order.OrderStatus.SHIPPED || status == Order.OrderStatus.OUT_FOR_DELIVERY) {
+                order.setShippedAt(java.time.LocalDateTime.now());
+            }
+            if (status == Order.OrderStatus.DELIVERED) {
+                order.setDeliveredAt(java.time.LocalDateTime.now());
+            }
+            if (shipment.get("estimatedDeliveryDays") != null) {
+                int days = ((Number) shipment.get("estimatedDeliveryDays")).intValue();
+                order.setEstimatedDelivery(java.time.LocalDateTime.now().plusDays(Math.max(days, 1)));
+            }
+
+            order.setUpdatedAt(java.time.LocalDateTime.now());
+            orderRepository.save(order);
+            return ResponseEntity.ok(order);
+        } catch (IllegalArgumentException | NullPointerException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid shipment status"));
         }
     }
 }

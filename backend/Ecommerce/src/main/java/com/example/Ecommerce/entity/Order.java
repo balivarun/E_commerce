@@ -53,11 +53,30 @@ public class Order {
     
     @Field("updated_at")
     private LocalDateTime updatedAt;
+
+    @Field("tracking_number")
+    private String trackingNumber;
+
+    @Field("carrier")
+    private String carrier;
+
+    @Field("estimated_delivery")
+    private LocalDateTime estimatedDelivery;
+
+    @Field("shipped_at")
+    private LocalDateTime shippedAt;
+
+    @Field("delivered_at")
+    private LocalDateTime deliveredAt;
     
     // Enum for Order Status
     public enum OrderStatus {
         CREATED,
         PAID,
+        PROCESSING,
+        SHIPPED,
+        OUT_FOR_DELIVERY,
+        DELIVERED,
         FAILED,
         CANCELLED,
         REFUNDED
@@ -182,5 +201,45 @@ public class Order {
     
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getTrackingNumber() {
+        return trackingNumber;
+    }
+
+    public void setTrackingNumber(String trackingNumber) {
+        this.trackingNumber = trackingNumber;
+    }
+
+    public String getCarrier() {
+        return carrier;
+    }
+
+    public void setCarrier(String carrier) {
+        this.carrier = carrier;
+    }
+
+    public LocalDateTime getEstimatedDelivery() {
+        return estimatedDelivery;
+    }
+
+    public void setEstimatedDelivery(LocalDateTime estimatedDelivery) {
+        this.estimatedDelivery = estimatedDelivery;
+    }
+
+    public LocalDateTime getShippedAt() {
+        return shippedAt;
+    }
+
+    public void setShippedAt(LocalDateTime shippedAt) {
+        this.shippedAt = shippedAt;
+    }
+
+    public LocalDateTime getDeliveredAt() {
+        return deliveredAt;
+    }
+
+    public void setDeliveredAt(LocalDateTime deliveredAt) {
+        this.deliveredAt = deliveredAt;
     }
 }

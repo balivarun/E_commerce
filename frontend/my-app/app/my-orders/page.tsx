@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useAuth } from '@/contexts/auth-context'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
-import { Package, ShoppingBag, CheckCircle, XCircle, Clock } from 'lucide-react'
+import { Package, ShoppingBag, CheckCircle, XCircle, Clock, Truck, PackageCheck, MapPin, CalendarDays } from 'lucide-react'
 import { getApiUrl } from '@/lib/api'
 
 const API_URL = getApiUrl()
@@ -24,11 +24,16 @@ interface Order {
   razorpayPaymentId: string
   totalAmount: number
   currency: string
-  status: 'CREATED' | 'PAID' | 'FAILED' | 'CANCELLED' | 'REFUNDED'
+  status: 'CREATED' | 'PAID' | 'PROCESSING' | 'SHIPPED' | 'OUT_FOR_DELIVERY' | 'DELIVERED' | 'FAILED' | 'CANCELLED' | 'REFUNDED'
   customerName: string
   customerEmail: string
   orderItems: OrderItem[]
   createdAt: string
+  trackingNumber?: string
+  carrier?: string
+  estimatedDelivery?: string
+  shippedAt?: string
+  deliveredAt?: string
 }
 
 const statusConfig = {
@@ -41,6 +46,26 @@ const statusConfig = {
     label: 'Pending',
     icon: Clock,
     className: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+  },
+  PROCESSING: {
+    label: 'Processing',
+    icon: Truck,
+    className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  },
+  SHIPPED: {
+    label: 'Shipped',
+    icon: PackageCheck,
+    className: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400',
+  },
+  OUT_FOR_DELIVERY: {
+    label: 'Out for Delivery',
+    icon: MapPin,
+    className: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
+  },
+  DELIVERED: {
+    label: 'Delivered',
+    icon: CheckCircle,
+    className: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
   },
   FAILED: {
     label: 'Failed',
@@ -210,6 +235,64 @@ export default function OrdersPage() {
                       </p>
                     )}
                   </div>
+
+                  {/* Shipment Tracking */}
+                  {['PAID', 'PROCESSING', 'SHIPPED', 'OUT_FOR_DELIVERY', 'DELIVERED'].includes(order.status) && (
+                    <div className="px-6 py-5 border-b border-border">
+                      <div className="flex items-center gap-2 mb-4">
+                        <Truck className="h-5 w-5 text-primary" />
+                        <h3 className="font-semibold">Track your order</h3>
+                      </div>
+
+                      {(() => {
+                        const stages = ['PAID', 'PROCESSING', 'SHIPPED', 'OUT_FOR_DELIVERY', 'DELIVERED']
+                        const currentIndex = stages.indexOf(order.status)
+                        return (
+                          <div className="grid grid-cols-5 gap-1 mb-5">
+                            {stages.map((stage, index) => (
+                              <div key={stage} className="text-center">
+                                <div className={`mx-auto h-3 w-3 rounded-full border-2 ${index <= currentIndex ? 'border-primary bg-primary' : 'border-muted-foreground/30 bg-background'}`} />
+                                {index < stages.length - 1 && (
+                                  <div className={`h-0.5 -mt-2 ml-[50%] ${index < currentIndex ? 'bg-primary' : 'bg-muted'}`} />
+                                )}
+                                <p className={`mt-3 text-[10px] sm:text-xs ${index <= currentIndex ? 'font-medium text-foreground' : 'text-muted-foreground'}`}>
+                                  {stage === 'OUT_FOR_DELIVERY' ? 'Out for delivery' : stage.charAt(0) + stage.slice(1).toLowerCase()}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        )
+                      })()}
+
+                      <div className="grid gap-3 sm:grid-cols-3 rounded-lg bg-muted/40 p-4">
+                        <div className="flex items-center gap-2">
+                          <Package className="h-4 w-4 text-muted-foreground" />
+                          <div>
+                            <p className="text-xs text-muted-foreground">Tracking number</p>
+                            <p className="font-mono text-sm font-medium">{order.trackingNumber || 'Not assigned yet'}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Truck className="h-4 w-4 text-muted-foreground" />
+                          <div>
+                            <p className="text-xs text-muted-foreground">Carrier</p>
+                            <p className="text-sm font-medium">{order.carrier || 'Processing'}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CalendarDays className="h-4 w-4 text-muted-foreground" />
+                          <div>
+                            <p className="text-xs text-muted-foreground">Estimated delivery</p>
+                            <p className="text-sm font-medium">
+                              {order.estimatedDelivery
+                                ? new Date(order.estimatedDelivery).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
+                                : 'To be confirmed'}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )
             })}
