@@ -1,11 +1,15 @@
 package com.example.Ecommerce.config;
 
 import com.example.Ecommerce.entity.Product;
+import com.example.Ecommerce.entity.User;
 import com.example.Ecommerce.repository.ProductRepository;
+import com.example.Ecommerce.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,6 +20,18 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Value("${ADMIN_EMAIL:}")
+    private String adminEmail;
+
+    @Value("${ADMIN_PASSWORD:}")
+    private String adminPassword;
+
     @Override
     public void run(String... args) {
         try {
@@ -23,6 +39,8 @@ public class DataInitializer implements CommandLineRunner {
             if (productRepository.count() == 0) {
                 initializeProducts();
             }
+            // Check if admin user exists
+            initializeAdmin();
         } catch (Exception ex) {
             log.error("MongoDB is unavailable; sample-product initialization was skipped. "
                     + "Check MONGODB_URI, Atlas cluster status, and network/DNS access.", ex);
@@ -191,5 +209,30 @@ public class DataInitializer implements CommandLineRunner {
         productRepository.save(watch);
 
         System.out.println("Sample products initialized! Total: 20 products");
+    }
+
+    private void initializeAdmin() {
+        if (adminEmail == null || adminEmail.isBlank()
+                || adminPassword == null || adminPassword.isBlank()) {
+            log.warn("Admin bootstrap is disabled. Set ADMIN_EMAIL and ADMIN_PASSWORD to create an administrator.");
+            return;
+        }
+        if (adminPassword.length() < 8) {
+            log.error("Admin bootstrap skipped: ADMIN_PASSWORD must contain at least 8 characters.");
+            return;
+        }
+
+        userRepository.findByEmail(adminEmail.trim()).ifPresentOrElse(user -> {
+            if (!"ADMIN".equalsIgnoreCase(user.getRole())) {
+                user.setRole("ADMIN");
+                userRepository.save(user);
+                log.info("Existing account {} promoted to ADMIN.", adminEmail);
+            }
+        }, () -> {
+            User admin = new User("ShopSphere Admin", adminEmail.trim(), passwordEncoder.encode(adminPassword));
+            admin.setRole("ADMIN");
+            userRepository.save(admin);
+            log.info("Bootstrap administrator created: {}", adminEmail);
+        });
     }
 }
