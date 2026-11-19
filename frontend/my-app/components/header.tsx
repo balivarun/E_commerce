@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter, usePathname } from "next/navigation"
-import { Menu, Search, ShoppingCart, X, LogOut, User, Package, Heart, MapPin, Bell } from "lucide-react"
+import { Menu, Search, ShoppingCart, X, LogOut, User, Package, Heart, MapPin, Bell, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Badge } from "@/components/ui/badge"
@@ -139,6 +139,9 @@ export function Header() {
                         { href: '/wishlist', icon: Heart, label: 'Wishlist' },
                         { href: '/addresses', icon: MapPin, label: 'Saved Addresses' },
                         { href: '/notifications', icon: Bell, label: 'Notifications' },
+                        ...(authState.user.role === 'ADMIN'
+                          ? [{ href: '/admin', icon: ShieldCheck, label: 'Admin Dashboard' }]
+                          : []),
                       ].map(({ href, icon: Icon, label }) => (
                         <Link
                           key={href}
