@@ -78,7 +78,7 @@ export default function AdminProductsPage() {
   const visible = products.filter((product) => product.name.toLowerCase().includes(search.toLowerCase()))
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6 dark:bg-[#090a12] lg:ml-64">
+    <div className="min-h-screen p-5 lg:p-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-6 flex items-center justify-between gap-4">
           <div><p className="text-sm text-violet-600">Inventory</p><h1 className="text-2xl font-black">Products</h1></div>

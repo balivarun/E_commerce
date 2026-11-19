@@ -39,7 +39,7 @@ export default function AdminMessagesPage() {
   const visible = messages.filter((message) => `${message.firstName} ${message.lastName} ${message.email} ${message.subject}`.toLowerCase().includes(search.toLowerCase()))
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6 dark:bg-[#090a12] lg:ml-64">
+    <div className="min-h-screen p-5 lg:p-8">
       <div className="mx-auto max-w-7xl"><div className="mb-6"><p className="text-sm text-violet-600">Support</p><h1 className="text-2xl font-black">Contact messages</h1></div>
         <div className="mb-4 flex items-center gap-2 rounded-xl border border-border bg-card px-3"><Search className="h-4 w-4 text-muted-foreground" /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search messages..." className="h-11 w-full bg-transparent text-sm outline-none" /></div>
         <div className="grid gap-4">{visible.map((message) => (

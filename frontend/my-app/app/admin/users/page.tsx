@@ -41,7 +41,7 @@ export default function AdminUsersPage() {
   const visible = users.filter((user) => `${user.name} ${user.email}`.toLowerCase().includes(search.toLowerCase()))
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6 dark:bg-[#090a12] lg:ml-64">
+    <div className="min-h-screen p-5 lg:p-8">
       <div className="mx-auto max-w-7xl"><div className="mb-6"><p className="text-sm text-violet-600">Access</p><h1 className="text-2xl font-black">Customers</h1></div>
         <div className="mb-4 flex items-center gap-2 rounded-xl border border-border bg-card px-3"><Search className="h-4 w-4 text-muted-foreground" /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search customers..." className="h-11 w-full bg-transparent text-sm outline-none" /></div>
         <div className="overflow-hidden rounded-2xl border border-border bg-card"><table className="w-full text-left text-sm"><thead className="border-b border-border bg-muted/40 text-xs uppercase text-muted-foreground"><tr><th className="p-4">Customer</th><th className="p-4">Email</th><th className="p-4">Role</th><th className="p-4">Joined</th></tr></thead><tbody>{visible.map((user) => (
